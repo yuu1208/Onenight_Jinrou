@@ -12,7 +12,7 @@ const client = new discord.Client();
 
 client.on('ready', message =>
 {
-	console.log('bot is ready!');
+	.log('bot is ready!');
 });
 
 client.on('message', message =>
