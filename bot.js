@@ -1,8 +1,8 @@
-const discord = require('discord.js')
-const client = new discord.Client()
+const Discord = require('discord.js')
+const client = new Discord.Client()
 
 client.on('ready', message => {
-  console.log(`${client.user.tag}にログインしました！`);
+  console.log(`${client.user.tag}にログインしました！`)
 })
 
 client.on('message', message => {
