@@ -60,7 +60,8 @@ client.on('message', message => {
   }
   
   if(message.content.match(BOT_PREFIX) && message.content.match(/この(さば|さーばー|鯖|サーバー)(、|は|に|には)(何人|なんにん)/)) {
-    message.channel.send("数えてみると、");
+    var CHANNEL = 802246886768640024;
+    message.channel.send("数えてみると、" + CHANNEL.memberCount + "人いたよ。");
     return;
   }
   
