@@ -23,8 +23,8 @@ client.on('message', message => {
   }
   
   if(message.content == "おひよ") {
-    const MSG_greeting = ["どうしたの？","ん、どした？？","呼んだ〜？","はーい！"];
-    message.channel.send(MSG_greeting[Math.floor(Math.random() * MSG_greeting.length) + 0]);
+    const MSG = ["どうしたの？","ん、どした？？","呼んだ〜？","はーい！"];
+    message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
     return;
   }
   
@@ -35,32 +35,38 @@ client.on('message', message => {
     return;
   }
   if(message.content.match(BOT_PREFIX) && message.content.match(/眠|ねむ(く|い)|おやすみ/)) {
-    var MSG_SLEEPY;
-    if(CHECK_MORNING = 1) {
-      MSG_SLEEPY = ['さっき起きたばっかなのに！','起きて！！','もう、遅刻しても知らないよ〜'];
+    var MSG;
+    if(CHECK_MORNING == 1) {
+      MSG = ['さっき起きたばっかなのに！','起きて！！','もう、遅刻しても知らないよ〜'];
     }
     else {
-      MSG_SLEEPY = ['眠いときにねるのが一番だけど、やることは終わった？','寝ちゃう？','そっかおやすみ〜((','もう寝ちゃうんですか...?'];
+      MSG = ['眠いときにねるのが一番だけど、やることは終わった？','寝ちゃう？','そっかおやすみ〜((','もう寝ちゃうんですか...?'];
     }
-    message.channel.send(CHECK_MORNING + MSG_SLEEPY[Math.floor(Math.random() * MSG_SLEEPY.length) + 0]);
+    message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
     CHECK_MORNING = 0;
     return;
   }
   
   if(message.content.match(BOT_PREFIX) && message.content.match(/かわいい|可愛/)) {
-    const MSG_greeting = ["あ、ありがとう(照)","照れるからやめて下さい//","かぁ〜、あなたのせいで、顔があっつくなったじゃん！","えへへ...ありがと"];
-    message.channel.send(MSG_greeting[Math.floor(Math.random() * MSG_greeting.length) + 0]);
+    const MSG = ["あ、ありがとう(照)","照れるからやめて下さい//","かぁ〜、あなたのせいで、顔があっつくなったじゃん！","えへへ...ありがと"];
+    message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
     return;
   }
   
-  if(message.content.match(BOT_PREFIX) && message.content.match(/結婚|けっこん(し(て|たい|よ))/)) {
-    const MSG_greeting = ["結婚ですか...私は人間ではないので、恋愛をすることすら、許されていないのです。","ごめんなさい","あなたがデジタルの世界に入り込んでくれた、考えます！","ごめんなさい、無理です。"];
-    message.channel.send(MSG_greeting[Math.floor(Math.random() * MSG_greeting.length) + 0]);
+  if(message.content.match(BOT_PREFIX) && message.content.match(/結婚|けっこん(し(て|たい|よ))|付き|つき(あ|会(おう|いたい))/)) {
+    const MSG = ["私は人間ではないので、恋愛をすることすら許されていないのです。","ごめんなさい","あなたがデジタルの世界に入り込んでくれたら、少しだけ考えます！","え、いきなりですか？"];
+    message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
+    return;
+  }
+  
+  if(message.content.match(BOT_PREFIX) && message.content.match(/この(さば|さーばー|鯖|サーバー)(、|は|に|には)(何人|なんにん)/)) {
+    message.channel.send("数えてみると、");
     return;
   }
   
   if(message.content.match(BOT_PREFIX) && isset(message.content)) {
-    message.channel.send("ごめん、私にはわからない、、");
+    message.channel.send("ごめんね、理解できなかった...");
+    return;
   }
   
 })
