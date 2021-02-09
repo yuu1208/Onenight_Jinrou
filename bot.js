@@ -29,7 +29,6 @@ client.on("guildMemberAdd", member => {
   //入場処理ロール追加
   member.roles.add('入場ロール');
   client.channels.cache.get('入退出記録CHのID').send(SEND_PREFIX + '<@' + member.user + '> さんが入場しました。');
-
 });
 
 //誰かが抜けた
