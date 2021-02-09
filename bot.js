@@ -26,7 +26,6 @@ function WHAT_THISDAY() {
 client.on('ready', () => {
   console.log("[INFO] " + `${client.user.tag} にログインしました`);
   client.channels.cache.get('802246886768640024').send(SEND_PREFIX + "今日は**" + GET_HEARTFUL_JAPANTIME() + "**です。**" + WHAT_THISDAY() + "**です。");
-  
 })
 
 //誰かが入ってきた
