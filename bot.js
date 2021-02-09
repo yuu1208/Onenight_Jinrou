@@ -4,6 +4,7 @@ const client = new Discord.Client();
 
 const SEND_PREFIX = "**ﾌﾟﾝｯ **";
 const youbi = ["日","月","火","水","木","金","土"];
+const OMIKUJI = ["大吉","中吉","小吉","末吉","凶"];
 
 function GET_HEARTFUL_JAPANTIME() {
   let jst_today = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
@@ -73,6 +74,11 @@ client.on('message', async message => {
   //時間を聞く
   if (message.content.match(/何時|^なんじ|time/i)) {
     message.channel.send(SEND_PREFIX + "今は " + GET_JAPANTIME() + " です。");
+    return;
+  }
+  
+  if (message.content.match(/みくじ|神籤/)) {
+    message.channel.send(OMIKUJI[Math.floor(Math.random() * OMIKUJI.length)] + "です。");
     return;
   }
   
