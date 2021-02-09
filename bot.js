@@ -2,7 +2,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const SEND_PREFIX = "**ﾌﾟﾝｯ **";
+const SEND_PREFIX = "**ﾌﾟﾝｯ　**";
 const youbi = ["日","月","火","水","木","金","土"];
 const OMIKUJI = ["大吉","中吉","小吉","末吉","凶"];
 
@@ -17,9 +17,15 @@ function GET_HEARTFUL_JAPANTIME() {
   return JAPAN_TIME;
 }
 
+function WHAT_THISDAY() {
+  let WhatThisDay = "ニートの日";
+  
+  return WhatThisDay;
+}
+
 client.on('ready', () => {
   console.log("[INFO] " + `${client.user.tag} にログインしました`);
-  client.channels.cache.get('802246886768640024').send(SEND_PREFIX + "今日は" + GET_HEARTFUL_JAPANTIME() + "です。");
+  client.channels.cache.get('802246886768640024').send(SEND_PREFIX + "今日は**" + GET_HEARTFUL_JAPANTIME() + "**です。**" + WHAT_THISDAY() + "**です。");
   
 })
 
@@ -77,8 +83,28 @@ client.on('message', async message => {
   }
   
   if (message.content.match(/みくじ|神籤/)) {
-    message.channel.send(OMIKUJI[Math.floor(Math.random() * OMIKUJI.length)] + "です。");
+    message.channel.send(SEND_PREFIX + OMIKUJI[Math.floor(Math.random() * OMIKUJI.length)] + "です。");
     return;
+  }
+  
+  if(Punish_lv2.test(message.content)) {
+    RUN_BANNED();
+  }
+  
+  if(Punish_lv1.test(message.content) || Punish_Adu.test(message.content)) {
+    if(message.member.roles.has('処罰ロール')) {
+      RUN_BANNED();
+    }
+    else {
+      message.member.roles.add('処罰ロール');
+      message.channel.send(SEND_PREFIX + '<@' + message.member + '> さんのルール違反行為を検知しました。');
+    }
+  }
+  
+  
+  function RUN_BANNED() {
+    message.member.ban();
+    message.channel.send(SEND_PREFIX + '<@' + message.member + '>さんの重大なルール違反行為を検知したため、入場禁止措置を行いました。');
   }
   
   
