@@ -1,14 +1,14 @@
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const ytdl = require('ytdl-core');
-const fs = require('fs');
 
-const SEND_PREFIX = "ﾌﾟﾝｯ ";
+const SEND_PREFIX = "**ﾌﾟﾝｯ **";
 const youbi = ["日","月","火","水","木","金","土"];
 
 client.on('ready', () => {
   console.log("[INFO] " + `${client.user.tag} にログインしました`);
+  client.channels.cache.get('802246886768640024').send("今日は " + GET_HEARTFUL_JAPANTIME() + "です。");
+  
 })
 
 //誰かが入ってきた
@@ -41,8 +41,21 @@ client.on('message', async message => {
   const Punish_lv2 = /ナチス|ソビエト|ｿﾋﾞｴﾄ|ソヴィエト|ｿｳﾞｨｴﾄ|(安倍|菅)(やめろ|辞めろ|ヤメロ|ﾔﾒﾛ)|(薬草|薬|パケ|大麻|野菜|葉っぱ)(売|あげ|取|うり)|(ほ|ホ|ﾎ)(別|込)|(援交|円光|援助交際|円)(します|する|した|したー)|(えろい|えろ|エロい|ｴﾛい|エロ|えちな|えっちな|え ちな|え 地|え　ちな)(写真|動画|しゃしん|どうが|がぞう|画像|どーが)|(着)(えろ|エロ|ｴﾛ)|(ほ|ホ)(別|込)/;
   const Punish_Adu = /(パイズリ|ぱいずり|ﾊﾟｲｽﾞﾘ)|(ペニ|ぺに|ﾍﾟﾆ)(ス|す|ｽ)|(ちん|チン|ﾁﾝ)(ちん|チン|ﾁﾝ)|(え|エ|ｴ)(っち|ッチ|ｯﾁ)|(ち|チ|ﾁ)(ん|ン|ﾝ)(こ|コ|ｺ)(?!.*んど)|(ぽこ|ポコ|ﾎﾟｺ)(ちん|チン|ﾁﾝ)|(まん|マン|ﾏﾝ)(こ|コ|ｺ)|(包|ほう|ホウ|ﾎｳ)(茎|けい|ケイ|ｹｲ)|(おっ|オッ|ｵ)(ぱい|パイ|ﾊﾟｲ)|(金|きん|キン|ｷﾝ)(玉|たま|タマ|ﾀﾏ)|(ぱん|パン|ﾊﾟﾝ)(つ|ツ|ﾂ)|(いめぷ|イメプ|ｲﾒﾌﾟ)|(ぱい|パイ|ﾊﾟｲ)(ぱん|パン|ﾊﾟﾝ)|(すかとろ|スカトロ|ｽｶﾄﾛ)|(爆乳|巨乳|並乳|貧乳)|(ろり|ロリ|ﾛﾘ|しす|シス|ｼｽ)(こん|コン|ｺﾝ)|(あなる|アナル|ｱﾅﾙ)|(けつ|ケツ|ｹﾂ)(穴|あな|アナ|ｱﾅ|ANA)|(素股|すまた|スマタ|ｽﾏﾀ)/;
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-
-
+  
+  var GET_HEARTFUL_JAPANTIME = function() {
+    let jst_today = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
+    let year = jst_today.getFullYear();
+    let month = ('0' + (jst_today.getMonth()+1)).slice(-2);
+    let date = ('0' + jst_today.getDate()).slice(-2);
+    let day = jst_today.getDay();
+    let hours = ('0' + jst_today.getHours()).slice(-2);
+    let minutes = ('0' + jst_today.getMinutes()).slice(-2);
+    let seconds = ('0' + jst_today.getSeconds()).slice(-2);
+    
+    let JAPAN_TIME = month + "月 " + date + "日 " + youbi[day] + "曜日";
+    return JAPAN_TIME;
+  }
+  
   function GET_JAPANTIME() {
     let jst_today = new Date(Date.now() + ((new Date().getTimezoneOffset() + (9 * 60)) * 60 * 1000));
     let year = jst_today.getFullYear();
@@ -52,8 +65,9 @@ client.on('message', async message => {
     let hours = ('0' + jst_today.getHours()).slice(-2);
     let minutes = ('0' + jst_today.getMinutes()).slice(-2);
     let seconds = ('0' + jst_today.getSeconds()).slice(-2);
-
-    var japan = year + "/" + month + "/" + date + " (" + youbi[day] + ") " + hours + ":" + minutes + ":" + seconds;
+    
+    let JAPAN_TIME = year + "/" + month + "/" + date + " (" + youbi[day] + ") " + hours + ":" + minutes + ":" + seconds;
+    return JAPAN_TIME;
   }
 
 
@@ -61,9 +75,8 @@ client.on('message', async message => {
   
   
   //時間を聞く
-  if (message.content == "!g time" || message.content.match(/何時|^なんじ|time/i)) {
-    GET_JAPANTIME();
-    //message.channel.send(SEND_PREFIX + "今は" + GET_JAPANTIME() + "です。");
+  if (message.content.match(/何時|^なんじ|time/i)) {
+    message.channel.send(SEND_PREFIX + "今は " + GET_JAPANTIME() + " です。");
     return;
   }
   
