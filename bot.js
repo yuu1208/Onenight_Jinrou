@@ -18,7 +18,7 @@ function GET_HEARTFUL_JAPANTIME() {
 }
 
 function WHAT_THISDAY() {
-  let WhatThisDay = "ニートの日";
+  let WhatThisDay = "";
   
   return WhatThisDay;
 }
