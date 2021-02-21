@@ -16,6 +16,7 @@ const Punish_Pri = /^0[789]0-\d{4}-\d{4}$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 let LEFT_REASON = "自主的に";
 var judge = "正常";
+var reason;
 let eew_cnt = 0;
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 const roles = ["800742672947871749","800742672947871750","800742672947871748","800742672947871747"];
@@ -114,12 +115,38 @@ client.on('message', async message => {
   setTimeout(EEW_CNT_RESET, 60000);
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   //ログ
-  if(message.content.length >= 1) {
-  if(Punish_lv2.test(message.content) || Punish_sit.test(message.content) || Punish_Pri.test(message.content)) {message.channel.send(runPunishLv2())}
-  else if(Punish_lv1.test(message.content) || Punish_Adu.test(message.content)) {
-  if(message.member.roles.cache.has('763300263292567563')) {
-  if((message.channel == CHANNEL[7] != Punish_Adu.test(message.content)) || Punish_lv1.test(message.content)) {message.channel.send(runPunishLv1())}
-  else {return}}}}
+  
+  if (Punish_lv1.test(message.content) || Punish_Adu.test(message.content)) { 
+    //警告ロールあり
+    if (message.member.roles.cache.has(roles[0])) {
+      
+      //アダルト発言をアダルトチャンネルで？
+      if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {
+        message.channel.send("c");
+        return;
+      }
+      //それ以外？
+      else {
+        reason = "警告ワードを2回発言する行為";
+        message.channel.send("a");
+        runPunishLv2();
+      }
+    }
+    //警告ロールなし
+    else { 
+      //アダルト発言をアダルトチャンネルで？
+      if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {
+        message.channel.send("d");
+        return;
+      }
+      //それ以外
+      else {
+        reason = "不適切な発言";
+        message.channel.send("b");
+        runPunishLv1();
+      }
+    }
+  }
   
   let FILE_WRITE = getTime_JPN + ',' + message.member.displayName + ',' + message.member + ',' + message.channel + ',' + message.content + ',' + message.id + ',' + judge + "\n";
   fs.appendFileSync("logs/logs.csv", FILE_WRITE);
