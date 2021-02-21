@@ -18,6 +18,11 @@ let LEFT_REASON = "自主的に";
 var judge = "正常";
 let eew_cnt = 0;
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+const roles = ["800742672947871749","800742672947871750","800742672947871748","800742672947871747"];
+/*
+roles変数の通し番号
+[0]警告 [1]処罰 [2]入場処理 [3]常連
+*/
 const CHANNEL = ["800742673001873493","800742674226216963","800742674226216964",,"800742674424266762","800742674226216965","800742673001873496","800742673924751391","800742673924751392","800742673924751394","800742673924751397","800742674226216960","804617566399496202"];
 /*
 CHANNEL変数の通し番号
@@ -62,12 +67,6 @@ function getTime_USA() {
   let RESULT = year + "/" + month + "/" + date + "(" + youbi[day] + ") " + hours + ":" + minutes + ":" + seconds;
   return RESULT;
 }
-function runPunishLv1() {
-  
-}
-function runPunishLv2() {
-  
-}
 
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 client.on('ready', () => {
@@ -89,6 +88,17 @@ client.on('message', async message => {
   //再帰呼び出し対策： BOTが話した語句には応答しない。
   if(message.author.id == client.user.id) {return}
   
+  function runPunishLv1() {
+    message.member.roles.add(roles[0]);
+    let RESULT = "<@" + message.member + "> 違反行為を検知しました。あなたは１度目の警告を受けました。";
+    return RESULT;
+  }
+  function runPunishLv2() {
+    message.member.roles.add(roles[1]);
+    let RESULT = "<@" + message.member + "> 違反行為を検知したため、処罰を実行しました。";
+    return RESULT;
+  }
+
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   //緊急地震速報転送
   if((message.author.id == "329257498668302346" && !message.content) && message.channel == CHANNEL[4]) {
@@ -105,15 +115,15 @@ client.on('message', async message => {
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   //ログ
   if(message.content.length >= 1) {
-  if(Punish_lv2.test(message.content) || Punish_sit.test(message.content) || Punish_Pri.test(message.content)) {runPunishLv2()}
+  if(Punish_lv2.test(message.content) || Punish_sit.test(message.content) || Punish_Pri.test(message.content)) {message.channel.send(runPunishLv2())}
   else if(Punish_lv1.test(message.content) || Punish_Adu.test(message.content)) {
   if(message.member.roles.cache.has('763300263292567563')) {
-  if((message.channel == CHANNEL[7] != Punish_Adu.test(message.content)) || Punish_lv1.test(message.content)) {runPunishLv2()}
+  if((message.channel == CHANNEL[7] != Punish_Adu.test(message.content)) || Punish_lv1.test(message.content)) {message.channel.send(runPunishLv1())}
   else {return}}}}
   
   let FILE_WRITE = getTime_JPN + ',' + message.member.displayName + ',' + message.member + ',' + message.channel + ',' + message.content + ',' + message.id + ',' + judge + "\n";
   fs.appendFileSync("logs/logs.csv", FILE_WRITE);
-  client.channel.cache.get(CHANNEL[2]).send(message.content);
+  client.channels.cache.get(CHANNEL[2]).send(message.content);
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   
   
