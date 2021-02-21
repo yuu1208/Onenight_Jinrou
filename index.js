@@ -12,4 +12,5 @@ if (process.env.DISCORD_BOT_TOKEN == undefined) {
   process.exit(0)
 }
 
+
 require('./bot.js')

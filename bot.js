@@ -19,10 +19,10 @@ var judge = "正常";
 var reason;
 let eew_cnt = 0;
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-const roles = ["800742672947871749","800742672947871750","800742672947871748","800742672947871747"];
+const roles = ["800742672947871749","800742672947871750","800742672947871748","800742672947871747","800742672947871746"];
 /*
 roles変数の通し番号
-[0]警告 [1]処罰 [2]入場処理 [3]常連
+[0]警告 [1]処罰 [2]入場処理 [3]常連 [4]アダルト
 */
 const CHANNEL = ["800742673001873493","800742674226216963","800742674226216964",,"800742674424266762","800742674226216965","800742673001873496","800742673924751391","800742673924751392","800742673924751394","800742673924751397","800742674226216960","804617566399496202"];
 /*
@@ -75,8 +75,8 @@ client.on('ready', () => {
 });
 
 client.on("guildMemberAdd", member => {
-  member.roles.add('800742672947871748');
-  client.channels.cache.get('800742673924751391').send('<@' + member.user + '>さんが来たよ〜〜！！');
+  member.roles.add(roles[2]);
+  client.channels.cache.get(CHANNEL[6]).send('<@' + member.user + '>さんが来たよ〜〜！！');
 });
 
 client.on("guildMemberRemove", member => {
@@ -90,17 +90,23 @@ client.on('message', async message => {
   if(message.author.id == client.user.id) {return}
   
   function runPunishLv1() {
+    judge = "▲ 警告判定";
     message.member.roles.add(roles[0]);
     client.channels.cache.get(CHANNEL[1]).send({embed: {color: 0xffff00,fields: [{name: "⚠不適切な行動を検知しました",value: "下記に表示されている対象者に警戒してください。\n\n**対象者**：" + "<@" + message.member.user + ">" + "\n　**処罰**：警告\n　**理由**：" + reason + "\n　**時間：**" + getTime_JPN() + "\n　**場所**：" + "<#" + message.channel + ">" + "\n　**内容**：" + message.content + "\n\n[対象メッセージにジャンプ](https://discord.com/channels/800742672947871744/" + message.channel + "/"+ message.id +")",inline: false},]}});
+    let FILE_WRITE_PUNISH = "▲警告処理," + message.member.displayName + "," + reason + "," + getTime_JPN() + "," + message.content + "," + message.id + "," + message.member + "\n";
+    fs.appendFileSync("logs/punish.txt", FILE_WRITE_PUNISH);
     let RESULT = "<@" + message.member + "> 違反行為を検知しました。あなたは１度目の警告を受けました。";
     return RESULT;
   }
   function runPunishLv2() {  
+    judge = "✕ 一発BAN判定";
     for(var cnt = 0; cnt < roles.length; cnt++) {
       message.member.roles.remove(roles[cnt]);
     }
     message.member.roles.add(roles[1]);
     client.channels.cache.get(CHANNEL[1]).send({embed: {color: 0xff0000,fields: [{name: "🚫 ユーザーの処罰を行いました",value: "誤判定の場合はユーザーネームをクリックし、役職を取り消すことで処罰を取り消すことができます。" +"\n\n**対象者**：" + "<@" + message.member.user + ">" + "\n　**処罰**：アカウント利用制限\n　**理由**：" + reason + "\n　**時間**：" + getTime_JPN() + "\n　**場所**：" + "<#" + message.channel + ">" + "\n　**内容**：" + message.content + "\n\n[対象メッセージにジャンプ](https://discord.com/channels/800742672947871744/" + message.channel + "/"+ message.id +")",inline: false},]}});
+    let FILE_WRITE_PUNISH = "●利用制限," + message.member.displayName + "," + reason + "," + getTime_JPN() + "," + message.content + "," + message.id + "," + message.member + "\n";
+    fs.appendFileSync("logs/punish.txt", FILE_WRITE_PUNISH);
     let RESULT = "<@" + message.member + "> 違反行為を検知したため、処罰を実行しました。";
     return RESULT;
   }
@@ -118,8 +124,9 @@ client.on('message', async message => {
   //1分経てばeew_cntを削除して震度4以上に戻す
   var EEW_CNT_RESET = function() {eew_cnt = 0}
   setTimeout(EEW_CNT_RESET, 60000);
+  
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-  //ログ
+  //ログと処罰
   
   if(Punish_lv2.test(message.content)) {
      reason = "一発BAN発言";
@@ -137,36 +144,90 @@ client.on('message', async message => {
   if (Punish_lv1.test(message.content) || Punish_Adu.test(message.content)) { 
     //警告ロールあり
     if (message.member.roles.cache.has(roles[0])) {
-      
       //アダルト発言をアダルトチャンネルで？
-      if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {
-        return;
-      }
+      if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {return;}
       //それ以外？
-      else {
-        reason = "警告ワードを2回発言する行為";
-        message.channel.send(runPunishLv2());
-      }
+      else {reason = "警告ワードを2回発言する行為";message.channel.send(runPunishLv2());}
     }
     //警告ロールなし
     else { 
       //アダルト発言をアダルトチャンネルで？
-      if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {
-        return;
-      }
+      if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {return;}
       //それ以外
-      else {
-        reason = "不適切な発言";
-        message.channel.send(runPunishLv1());
-      }
+      else {reason = "不適切な発言";message.channel.send(runPunishLv1());}
     }
   }
   
-  let FILE_WRITE = getTime_JPN + ',' + message.member.displayName + ',' + message.member + ',' + message.channel + ',' + message.content + ',' + message.id + ',' + judge + "\n";
+  let FILE_WRITE = getTime_JPN() + ',' + message.member.displayName + ',' + message.member + ',' + message.channel + ',' + message.content + ',' + message.id + ',' + judge + "\n";
   fs.appendFileSync("logs/logs.csv", FILE_WRITE);
-  client.channels.cache.get(CHANNEL[2]).send(message.content);
-  return;
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  
+  
+    //年齢制限を聞くやつ
+  if (message.content == "MSG_RULE") {
+    message.channel.send(
+      {embed: {color: 0xcccccc,fields: [
+        {name: "📔 サーバールール・利用規約",value: "当サーバーに入場し、年齢確認を終えた方は、以下のルールと利用規約に同意し、いかなる処分を受けてもそれに服従すると同時に、下記に記載する事項で発生した損害等については、運営は一切の責任を追わないものとします。",inline: false},
+        {name: "▼ 年齢確認",value: "```・当サーバーのBOTは、年齢確認ができるものとします。\n・あくまでも自己申告制ですので、身分証明書などを提出する必要はありません```",inline: false},
+        {name: "▼ 禁止事項",value: "```・ハラスメント行為（セクハラ・モラハラ等）\n・チャットやVCで執拗に入退出や送信をする行為\n・相手が拒否しているのにも関わらず個人情報等を聞き出す行為\n・当サーバーやユーザーの情報を蓄積/販売する行為\n・連続でBOTが反応する語句を送信する行為\n・セキュリティの脆弱性を突く/突こうと試みる行為\n・その他、運営が不適切と判断したもの```",inline: false},
+        {name: "▼ VC使用時の注意",value: "```・ゲーム専用VCや雑談専用VCがありますので、用途に合う部屋を使用してください。\n・聞き専（ミュート勢の方など）は聞き専CHを使用してください。\n・用途以外のVCの使用は禁止です。```",inline: false},
+        {name: "当サーバーは迷惑行為検知システムにより、24時間365日監視しています",value: "万一、検知システムに反応しない迷惑行為を発見した場合には、いかなる処罰・法的措置も辞さないことを当利用規約に記します。\n\nこのサーバーを使うみなさまが、安心して利用できるコミュニティを継続するために、ルール厳守にご理解ご協力をお願い致します。",inline: false},
+      ]}});
+   return;
+  }
+  
+  else if (message.content == "MSG_WELCOME") {
+    message.channel.send(
+      {embed: {color: 0xEC407A,fields: [
+        {name: "🎉 ようこそサーバーへ！",value: "数あるサーバーの中から当サーバーを選んで頂き、ありがとうございます！",inline: false},
+        {name: "■ まずなにする？",value: "**”年齢認証にご協力下さい”**タブより、年齢確認のご協力をお願いします！\n年齢認証が完了するまで、通常のチャットやVCはご利用いただけません！",inline: false},
+        {name: "■ 年齢認証が終わったら",value: "一般チャットで初めての挨拶をしてみたり、会話に参加してみよう！\nVCに参加するのもGOOD！",inline: false},
+        {name: "■ 年齢制限後に一般チャット等が表示されない場合",value: "BOTが処理をするのに時間がかかっています。\n通常は数秒(長くても10秒)で終わりますが、もし表示されない場合は @ًゆう までご一報下さい！",inline: false},
+        {name: "■ 告知：サーバーのレビューをお願いします！",value: "サーバーに７日間以上滞在すると、DISBOARDにてサーバーのレビューが書き込めるようになります！新しいユーザーの方を勧誘するためにも、レビュー投稿に是非お願い致します！\n\nレビューはこちらから！\nhttps://disboard.org/ja/review/create/800742672947871744",inline: false},
+      ]}});
+   return;
+  }
+  
+  
+  else if (message.content == "MSG_AGECHECK") {
+    message.channel.send(
+      {embed: {color: 0xEC407A,fields: [
+        {name: "⚠ 年齢認証",value: "当サーバーでは、青少年の方の健全な育成に心がけております。利用者の方々には、13歳未満でないことの確認を行っております。なお、確認はBOTが自動的に行います。年齢はBOTのサーバーに保管されます。そのため、__運営があなたの年齢を知ることはできません。__",inline: false},
+        {name: ":pray: 年齢確認のご協力のお願い",value: "チャット欄に、年齢を __**数値のみで**__ 送信してください。\n送信して数秒経つと、送信して頂いた年齢は自動的に削除され、チャット、VCが利用できるようになります。\n\n例: 18歳の場合 ➟ 「18」と **__”半角英数”__** で送信してください。\n",inline: false}
+      ]}});
+   return;
+  }
+  
+  //ルール
+  else if (message.content == "MSG_NEWCOMER") {
+    message.channel.send(
+      {embed: {color: 0x10eb73,fields: [
+        {name: "☑ サーバールールと利用規約",value: "当サーバーに入場し、年齢確認を終えた方は、以下のルールと利用規約に同意し、いかなる処分を受けてもそれに服従すると同時に、下記に記載する事項で発生した損害等については、運営は一切の責任を追わないものとします。",inline: false},1111111111111
+      ]}});
+   return;
+  }
+  
+  
+  //警告
+  if (message.content == "MSG_WARN") {  
+    message.channel.send(
+      {embed: {color: 0xffff00,fields: [
+        {name: "⚠ 警告処分",value: "当サーバーで軽度のルール違反を犯すと、「警告処分中」の役職が付きます。\n役職がつけられた理由は以下の通りです。\n\n```・チャットやVCでの著しく誹謗な発言\n・VCチャンネルの不正利用（入退室を繰り返すなど）\n・その他、運営が不適切と判断し役職付与が適当と判断した場合```\nこの役職が付与されている者は、次回以降の違反が厳罰化されます。もう一度ルールをご確認頂き、ルール違反の再発防止に努めて下さい。",inline: false},
+        {name: "次回の違反は利用制限/BANになります",value: "2回目以降の違反は厳罰化され、違反行為により利用制限、BAN、Kick等の処罰が科されますので、十分にご注意下さい。",inline: false},
+        {name: "誤審・不服申立て",value: "あなたはこの処罰に対して、誤審・不服を申し立てる権利を有します。この処罰に対して不服・誤審だと思う場合は、当サーバーの管理人 <@532928957402710046> まで**__DM__**でご連絡下さい。追って連絡を返信させて頂きます。",inline: false}
+     ]}});
+    return;
+  }
+  
+  //処罰
+  if (message.content == "MSG_PUNISH") {  
+    message.channel.send(
+      {embed: {color: 0xff0000,fields: [
+        {name: "🚫 利用制限措置",value: "あなたは、当サーバーで重大な違反、もしくは軽度な違反を二度繰り返したため、このサーバーでの行為が制限されています。\n一定時間経過後には解除されますが、過去の違反や今回の違反により、処罰時間が変動する場合があります。",inline: false},
+        {name: "誤審・不服申立て",value: "あなたはこの処罰に対して、誤審・不服を申し立てる権利を有します。この処罰に対して不服・誤審だと思う場合は、当サーバーの管理人 <@532928957402710046> まで**__DM__**でご連絡下さい。追って連絡を返信させて頂きます。",inline: false}
+      ]}});
+    return;
+  }
   
   
 });
