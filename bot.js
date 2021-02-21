@@ -1,4 +1,4 @@
- const Discord = require('discord.js')
+const Discord = require('discord.js')
 const client = new Discord.Client()
 
 const isset = function(data){ if(data === "" || data === null || data === undefined){ return false; }else{ return true; } }; 
@@ -23,7 +23,7 @@ client.on('message', message => {
     return;
   }
   
-  if(message.content == "おひよ") {
+  if(message.content == BOT_PREFIX) {
     const MSG = ["どうしたの？","ん、どした？？","呼んだ〜？","はーい！"];
     message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
     return;
@@ -49,7 +49,13 @@ client.on('message', message => {
   }
   
   if(message.content.match(BOT_PREFIX) && message.content.match(/かわいい|可愛/)) {
-    const MSG = ["あ、ありがとう(照)","照れるからやめて下さい//","かぁ〜、あなたのせいで、顔があっつくなったじゃん！","えへへ...ありがと"];
+    const MSG = ["あ、ありがとう(照)","照れるからやめて下さい//","ｶｧ~。あなたのせいで、顔があっつくなったじゃん！","えへへ...ありがと"];
+    message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
+    return;
+  }
+  
+  if(message.content.match(BOT_PREFIX) && message.content.match(/(し|死|シ)(ね|ネ|んで)|(殺|コ|こ)(ろす|ロス)(ぞ|ゾ)/)) {
+    const MSG = ["なんてそんなこと言うの...","ひどい"];
     message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
     return;
   }
@@ -57,12 +63,6 @@ client.on('message', message => {
   if(message.content.match(BOT_PREFIX) && message.content.match(/結婚|けっこん(し(て|たい|よ))|付き|つき(あ|会(おう|いたい))/)) {
     const MSG = ["私は人間ではないので、恋愛をすることすら許されていないのです。","ごめんなさい","あなたがデジタルの世界に入り込んでくれたら、少しだけ考えます！","え、いきなりですか？"];
     message.channel.send(MSG[Math.floor(Math.random() * MSG.length) + 0]);
-    return;
-  }
-  
-  if(message.content.match(BOT_PREFIX) && message.content.match(/この(さば|さーばー|鯖|サーバー)(、|は|に|には)(何人|なんにん)/)) {
-    var CHANNEL = 802246886768640024;
-    message.channel.send("数えてみると、" + CHANNEL.memberCount + "人いたよ。");
     return;
   }
   
