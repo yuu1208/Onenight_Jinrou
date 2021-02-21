@@ -91,11 +91,16 @@ client.on('message', async message => {
   
   function runPunishLv1() {
     message.member.roles.add(roles[0]);
+    client.channels.cache.get(CHANNEL[1]).send({embed: {color: 0xffff00,fields: [{name: "⚠不適切な行動を検知しました",value: "下記に表示されている対象者に警戒してください。\n\n**対象者**：" + "<@" + message.member.user + ">" + "\n　**処罰**：警告\n　**理由**：" + reason + "\n　**時間：**" + getTime_JPN() + "\n　**場所**：" + "<#" + message.channel + ">" + "\n　**内容**：" + message.content + "\n\n[対象メッセージにジャンプ](https://discord.com/channels/800742672947871744/" + message.channel + "/"+ message.id +")",inline: false},]}});
     let RESULT = "<@" + message.member + "> 違反行為を検知しました。あなたは１度目の警告を受けました。";
     return RESULT;
   }
-  function runPunishLv2() {
+  function runPunishLv2() {  
+    for(var cnt = 0; cnt < roles.length; cnt++) {
+      message.member.roles.remove(roles[cnt]);
+    }
     message.member.roles.add(roles[1]);
+    client.channels.cache.get(CHANNEL[1]).send({embed: {color: 0xff0000,fields: [{name: "🚫 ユーザーの処罰を行いました",value: "誤判定の場合はユーザーネームをクリックし、役職を取り消すことで処罰を取り消すことができます。" +"\n\n**対象者**：" + "<@" + message.member.user + ">" + "\n　**処罰**：アカウント利用制限\n　**理由**：" + reason + "\n　**時間**：" + getTime_JPN() + "\n　**場所**：" + "<#" + message.channel + ">" + "\n　**内容**：" + message.content + "\n\n[対象メッセージにジャンプ](https://discord.com/channels/800742672947871744/" + message.channel + "/"+ message.id +")",inline: false},]}});
     let RESULT = "<@" + message.member + "> 違反行為を検知したため、処罰を実行しました。";
     return RESULT;
   }
@@ -116,34 +121,43 @@ client.on('message', async message => {
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   //ログ
   
+  if(Punish_lv2.test(message.content)) {
+     reason = "一発BAN発言";
+     message.channel.send(runPunishLv2());
+  }
+  else if(Punish_sit.test(message.content)) {
+     reason = "有害なサイトリンクを掲載する行為";
+     message.channel.send(runPunishLv2());
+  }
+  else if(Punish_Pri.test(message.content)) {
+     reason = "個人情報の掲載行為";
+     message.channel.send(runPunishLv2());
+  }
+  
   if (Punish_lv1.test(message.content) || Punish_Adu.test(message.content)) { 
     //警告ロールあり
     if (message.member.roles.cache.has(roles[0])) {
       
       //アダルト発言をアダルトチャンネルで？
       if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {
-        message.channel.send("c");
         return;
       }
       //それ以外？
       else {
         reason = "警告ワードを2回発言する行為";
-        message.channel.send("a");
-        runPunishLv2();
+        message.channel.send(runPunishLv2());
       }
     }
     //警告ロールなし
     else { 
       //アダルト発言をアダルトチャンネルで？
       if(message.channel == CHANNEL[7] && Punish_Adu.test(message.content)) {
-        message.channel.send("d");
         return;
       }
       //それ以外
       else {
         reason = "不適切な発言";
-        message.channel.send("b");
-        runPunishLv1();
+        message.channel.send(runPunishLv1());
       }
     }
   }
@@ -151,6 +165,7 @@ client.on('message', async message => {
   let FILE_WRITE = getTime_JPN + ',' + message.member.displayName + ',' + message.member + ',' + message.channel + ',' + message.content + ',' + message.id + ',' + judge + "\n";
   fs.appendFileSync("logs/logs.csv", FILE_WRITE);
   client.channels.cache.get(CHANNEL[2]).send(message.content);
+  return;
   //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
   
   
