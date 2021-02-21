@@ -18,7 +18,7 @@ const Punish_Pri = /^0[789]0-\d{4}-\d{4}$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.
 let LEFT_REASON = "自主的に";
 var judge = "正常";
 var reason;
-let suffix;
+var suffix = [];
 let eew_cnt = 0;
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 const roles = ["800742672947871749","800742672947871750","800742672947871748","800742672947871747","800742672947871746"];
@@ -187,11 +187,12 @@ client.on('message', async message => {
   //おみくじ
   if(message.content.match(/おみくじ|オミクジ|御神籤/)) {  
     const omikuji_rand = Math.floor(Math.random() * omikuji.length);
+    
     if(omikuji_rand >= 0 && omikuji_rand <= 2) {
-        let suffix = ["と出ました！","でした","です！"];
+        suffix = ["と出ました！","でした","です！"];
       }
       else if(omikuji_rand >= 3) {
-        let suffix = ["…","です。","でした"];
+        suffix = ["残念！","です。","でした"];
       }
       message.channel.send({embed: {color: 0xF06292,fields: [{name: ":clipboard: おみくじの結果",value: "<@" + message.member + ">さんの結果は、``" + omikuji[omikuji_rand] + "`` " + suffix[Math.floor(Math.random() * suffix.length)],inline: false}]}});
       return;
