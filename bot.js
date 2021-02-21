@@ -6,7 +6,7 @@ require('./GAME_jinrou.js');
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 const youbi = ["日","月","火","水","木","金","土"];
 const EEW_icon = "https://play-lh.googleusercontent.com/91udG1PTmvsm_u7dvQmj4MuW3KK4-vQjXl359qnHkXDYH_wxKkdE6Fo6pBI6zngsqxw";
-const EEW_MSG = [":warning::loudspeaker: **緊急地震速報（気象庁発表）**","```これは試験送信です。実際にはこの通知が流れますので、お見知り置きください。```\n\n緊急地震速報を受信しました。強い揺れに備えてください。\n地震の詳細の情報は以下のとおりです。\n\n","\n⚠**一律配信のため、一部地域では揺れない場合があります**\n\nこの情報を鵜呑みにせず、テレビ・ラジオ等の電源をONにし最新情報を得て下さい。\n\nまた、すでに揺れている場合は、落ち着いて行動・避難してください。\n\n津波の恐れがありますので、海岸や河口の近くにいる方は、直ちに安全な高台や津波避難ビルに避難してください。 \n\n> NHKニュース（災害時地上波同時配信）\nhttps://plus.nhk.jp/watch/ch/g1\n\n> Yahooリアルタイム地震モニター\nhttps://typhoon.yahoo.co.jp/weather/jp/earthquake/kyoshin```\n\n @everyone"];
+const EEW_MSG = [":warning::loudspeaker: **緊急地震速報（気象庁発表）**","緊急地震速報を受信しました。強い揺れに備えてください。\n地震の詳細の情報は以下のとおりです。\n\n","\n⚠**一律配信のため、一部地域では揺れない場合があります**\n\nこの情報を鵜呑みにせず、テレビ・ラジオ等の電源をONにし最新情報を得て下さい。\n\nまた、すでに揺れている場合は、落ち着いて行動・避難してください。\n\n津波の恐れがありますので、海岸や河口の近くにいる方は、直ちに安全な高台や津波避難ビルに避難してください。 \n\n> NHKニュース（災害時地上波同時配信）\nhttps://plus.nhk.jp/watch/ch/g1\n\n> Yahooリアルタイム地震モニター\nhttps://typhoon.yahoo.co.jp/weather/jp/earthquake/kyoshin```\n\n @everyone"];
 const EEW_QUAKE = ["４以上","５弱以上（最大震度上昇）","５強以上（最大震度上昇）","6弱以上（最大震度上昇）","６強以上（最大震度上昇）","７（最大震度上昇）"];
 const Punish_lv1 = /(死|し|シ|ｼ)(んじま|ね|ネ|ﾈ)(?!.*。|.*w|.*え|.*ベンチ|.*べんち)|^(?!コロ|ころ)(殺|ころ|コロ|ｺﾛ)(す|ス|ｽ|し|シ|す|ス|ｽ)(?!.*けど|.？)|(は|ハ|ﾊ)(げ|ゲ|ｹﾞ)(?!.*ーム|.*で)|(き|キ|ｷ)(っしょ|ッショ|ｯｼｮ|しょ|ショ|ｼｮ)|(唐澤|カラサワ|ｶﾗｻﾜ|ブ|ﾌﾞ|kr)(貴洋|たかひろ|ﾀｶﾋﾛ|リュ|ﾘｭ|sw)|(馬鹿|バカ|ﾊﾞｶ)(?!.*眠|.*痛|.*いたい|.*いてぇ|.*ねむい|.*ねみい|.*ねみぃ|.*くさ|.*臭|.*な)|^(?!下手)(糞|くそ|クソ|ｸｿ)(?!.*眠|.*痛|.*いたい|.*いてぇ|.*ねむい|.*ねみい|.*ねみぃ|.*ン|.*ぉ|.*この|.*つま|.*虚|.*寒|.*暑|.*あつ|.*さむ)|.*fuck|.*wtf|.*WTF/i;
 const Punish_lv2 = /ナチス|(安倍|菅)(やめろ|辞めろ|ヤメロ|ﾔﾒﾛ)|(薬草|薬|パケ|大麻|野菜|葉っぱ)(売|あげ|取|うり)|(ほ|ホ|ﾎ)(別|込)|(援交|円光|援助交際|円)(します|する|した|したー)|(えろい|えろ|エロい|ｴﾛい|エロ|えちな|えっちな|え ちな|え 地|え　ちな)(写真|動画|しゃしん|どうが|がぞう|画像|どーが)|(着)(えろ|エロ|ｴﾛ)|(ほ|ホ)(別|込)/;
@@ -15,14 +15,15 @@ const Punish_sit = /(pornhub|xvideos|xhamster|ero-video|avgle|javfull|hao123)(.*
 const Punish_Pri = /^0[789]0-\d{4}-\d{4}$|^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 let LEFT_REASON = "自主的に";
-let eew_cnt;
+var judge = "正常";
+let eew_cnt = 0;
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-const CHANNEL = ["800742673001873493","800742674226216963","800742674226216964","800742674226216965","800742673001873496","800742673924751391","800742673924751392","800742673924751394","800742673924751397","800742674226216960","804617566399496202"];
+const CHANNEL = ["800742673001873493","800742674226216963","800742674226216964",,"800742674424266762","800742674226216965","800742673001873496","800742673924751391","800742673924751392","800742673924751394","800742673924751397","800742674226216960","804617566399496202"];
 /*
 CHANNEL変数の通し番号
-[0]玄関 [1]管理ログ [2]動作確認 [3]地震警報 [4]お知らせ [5]一般CH [6]アダルトCH [7]聞き専多目的 [8]聞き専雑談1 [9]聞き専雑談2 [10]聞き専ゲーム
+[0]玄関 [1]管理ログ [2]動作確認 [3]年齢確認 [4]地震警報 [5]お知らせ [6]一般CH [7]アダルトCH [8]聞き専多目的 [9]聞き専雑談1 [10]聞き専雑談2 [11]聞き専ゲーム
 
-→地震速報通知は4番以上から通知
+→地震速報通知は5番以上から通知
 */
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 function getTime_JPN() {
@@ -78,20 +79,30 @@ client.on("guildMemberRemove", member => {
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 client.on('message', async m => {
   
+  
   //再帰呼び出し対策： BOTが話した語句には応答しない。
   if(m.author.id == client.user.id) {return}
   
-  if((m.author.id == "329257498668302346" && !m.content) && m.channel == CHANNEL[3]) {
+  //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  //緊急地震速報転送
+  if((m.author.id == "329257498668302346" && !m.content) && m.channel == CHANNEL[4]) {
     eew_cnt++;
     if(eew_cnt >= 6) {eew_cnt = 5}
-    for(var cnt = 4; cnt < CHANNEL.length; cnt++) {
-      const notif_eew = await client.channels.cache.get(CHANNEL[cnt]).send({embed: {color: 0xff0000,thumbnail: {url: EEW_icon},fields: [{name: EEW_MSG[0],value: EEW_MSG[1] + "```発生日時：" + getTime_JPN() + " 頃\n予想震度：" + EEW_QUAKE[eew_cnt] + "```" + EEW_MSG[2],inline: false},]}});
+    for(var cnt = 5; cnt < CHANNEL.length; cnt++) {
+      const notif_eew = await client.channels.cache.get(CHANNEL[cnt]).send({embed: {color: 0xff0000,thumbnail: {url: EEW_icon},fields: [{name: EEW_MSG[0],value: EEW_MSG[1] + "```発生日時：" + getTime_JPN() + " 頃\n予想震度：" + EEW_QUAKE[eew_cnt-1] + "```" + EEW_MSG[2],inline: false},]}});
       notif_eew.delete({ timeout: 10000 });
     }
   }
   //1分経てばeew_cntを削除して震度4以上に戻す
   var EEW_CNT_RESET = function() {eew_cnt = 0}
   setTimeout(EEW_CNT_RESET, 60000);
+  //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  //ログ
+  if(message.content )
+  if (!m.attachments.first() && m.member.user != m.member.user && m.channel != CHANNEL[1] && m.channel != CHANNEL[3]) {
+    var FILE_WRITE = getTime_JPN + ',' + m.member.displayName + ',' + m.member + ',' + m.channel + ',' + m.content + ',' + m.id + ',' + judge + "\n";
+    fs.appendFileSync("logs/logs.csv", FILE_WRITE);
+  }
   
-})
+});
 client.login(process.env.DISCORD_BOT_TOKEN)
