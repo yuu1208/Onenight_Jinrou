@@ -59,7 +59,7 @@ client.on('message', async message => {
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
       message.channel.send(":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。これよりゲームを開始します！");
-      setTimeout(J_PLAY_DAY1_DAYTIME,5000);
+      setTimeout(J_PLAY_DAY1_DAYTIME,1000);
     }
   }
   
@@ -105,7 +105,7 @@ client.on('message', async message => {
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 人狼",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 占い師",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
     message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 1日目・夜",value: "すっかり日が暮れて、夜になりました。\n人狼と占い師の方には、個人にてチャットを送信します。他の方は朝になるまで待ちましょう！",inline: false},]}});
-    setTimeout(J_PLAY_DAY2_DAYTIME,5000);
+    setTimeout(J_PLAY_DAY2_DAYTIME,10000);
     
   }
   
@@ -115,11 +115,11 @@ client.on('message', async message => {
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
         if(FortuneWatcher == 0) {
           J_Fortune_To = J_PlayerList[J_Number - 1];
-          message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占った結果、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "でした。");
+          message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占った結果、``" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "``でした。");
           FortuneWatcher = 1;
         }
         else {
-          message.channel.send("⚠ 占いは１人のみ実行できます。");
+          message.channel.send("⚠ 占える回数は一度のみです。");
         }
       }
       else if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
@@ -130,13 +130,25 @@ client.on('message', async message => {
   
   function J_PLAY_DAY2_DAYTIME() {
     
-    if(J_MurderTo == "undefined") {
+    if(!J_MurderTo) {
       J_MurderTo = J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)];
     }
-    
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n残念なことに、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n残念なことに、**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
+    setTimeout(J_PLAY_DAY2_NIGHT,10000);
   }
   
+  if(message.author == J_MurderTo) {
+    message.delete();
+  }
+  
+  function J_PLAY_DAY2_NIGHT() {
+    message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。もっとも票の多かった方は、次の日の朝に殺害されてしまいます。あなたが人狼だと思う人に票を入れてください。なお投票は1回・1人のみですので、お間違えの内容にお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
+    
+    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+      if()
+      client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
+    }
+  }
 
   
 });
