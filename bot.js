@@ -3,7 +3,7 @@ const client = new Discord.Client();
 
 var cnt;
 
-var J_PlayerCount = -1;
+var J_PlayerCount = 0;
 var J_PlayerList = [];
 var J_PlayerJobs = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
@@ -29,7 +29,7 @@ client.on('message', async message => {
   
   if(message.content == "人狼参加") {
     message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加処理中",value: "<@" + message.author.id +"> \n参加依頼を受け付けました。\nただいま処理中です、しばらくお待ち下さい！",inline: false},]}});
-    J_ready(message.member.user);
+    J_ready(message.author);
   }
   
   //開始準備
@@ -77,14 +77,18 @@ client.on('message', async message => {
     }
     J_PlayerJobs[J_JinrohRand] = 2;
     
-    //プレイヤー全員に割り振られた役職をDMで伝える
-    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
-      client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： あなたの役職",value: "あなたは **" + J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、ゲーム画面に戻ってください。",inline: false},]}});
-    }
-    
     if(J_Debug == 1) {
       message.channel.send("職業カードID: " + J_PlayerJobs);
     }
+    
+    //プレイヤー全員に割り振られた役職をDMで伝える
+    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+      client.users.fetch(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： あなたの役職",value: "あなたは **" + J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、ゲーム画面に戻ってください。",inline: false},]}});
+    }
+    
+    
+    
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 1日目・昼",value: "なんてうつくしい快晴な空なのでしょう！\nさて、プレイヤーの皆様には、個人チャットであなたの職業を送信しました。確認を行った人から、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
     
   }
   
