@@ -188,7 +188,7 @@ client.on('message', async message => {
     
       let J_Number = message.content;
 
-      if(message.channel.type == "dm" && message.author == J_PlayerListJ_PlayerList.indexOf(message.author)) {
+      if(message.channel.type == "dm" && J_PlayerList.includes(message.author.id)) {
         message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
         
         J_MurderVote[J_PlayerList[J_Number - 1]] += 1;
@@ -197,6 +197,9 @@ client.on('message', async message => {
         
         //投票ユーザーをplayerlistから検索してその添字の場所にvoteにつっこむ。
       }
+    else {
+      message.channel.send("⚠ 投票対象者ではありません");
+    }
   }
   
   function J_PLAY_DAY3_DAYTIME() {
