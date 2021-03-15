@@ -6,6 +6,7 @@ var cnt;
 var J_PlayerCount = 0;
 var J_PlayerList = [];
 var J_PlayerJobs = [];
+var J_PlayerList_Select = "";
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
@@ -55,7 +56,7 @@ client.on('message', async message => {
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
       message.channel.send(":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。これよりゲームを開始します！");
-      setTimeout(J_PLAY_DAY1_DAYTIME(),5000);
+      setTimeout(J_PLAY_DAY1_DAYTIME,5000);
     }
   }
   
@@ -87,14 +88,19 @@ client.on('message', async message => {
     }
   
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 1日目・昼",value: "なんてうつくしい快晴な空なのでしょう！\nさて、プレイヤーの皆様には、個人チャットであなたの職業を送信しました。確認を行った人から、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
-    setTimeout(J_PLAY_DAY1_NIGHT(),J_WAIT_TIME);
+    setTimeout(J_PLAY_DAY1_NIGHT,J_WAIT_TIME);
     
     return;
   }
   
   function J_PLAY_DAY1_NIGHT() {
-    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 人狼",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList,inline: false},]}});
-    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 占い師",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList,inline: false},]}});
+    
+    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+      J_PlayerList_Select += cnt+1 + "： <@" + J_PlayerList[cnt] + ">\n";
+    }
+    
+    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 人狼",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
+    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 占い師",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
       
   }
   
