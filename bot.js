@@ -12,7 +12,7 @@ var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 4;
+  let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
   let J_Debug = 0;
@@ -103,32 +103,24 @@ client.on('message', async message => {
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 占い師",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
     
     message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 1日目・夜",value: "すっかり日が暮れて、夜になりました。\n人狼と占い師の方には、個人にてチャットを送信します。他の方は朝になるまで待ちましょう！",inline: false},]}});
-
     
-    if(message.channel.type == "dm" && isNaN(message.content)) {
-      message.channel.send("⚠ 正しく入力がされていないか、投票を受け付けていません！");
-    }
     
-    if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
-      if(message.content >= J_PLAYER_LIMIT) {
-        message.channel.send("⚠ 正しく入力がされていないか、投票を受け付けていません！");
-      }
-      else {
-        message.channel.send(J_PlayerList[message.content - 1] + "さんを殺害します。");
-      }
-    }
-    if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
-      if(message.content >= J_PLAYER_LIMIT) {
-        message.channel.send("⚠ 正しく入力がされていないか、投票を受け付けていません！");
-      }
-      else {
-        message.channel.send(J_PlayerList[message.content - 1] + "さんを占います。");
-      }
-    }
     
-    setTimeout(J_PLAY_DAY2_DAYTIME,J_WAIT_TIME);
+    setTimeout(J_PLAY_DAY2_DAYTIME,60000);
     
   }
+  
+  if(message.content <= J_PLAYER_LIMIT) {
+      
+      let J_Number = message.content;
+      
+      if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
+        message.channel.send(J_PlayerList[J_Number - 1] + "さんを占います。");
+      }
+      else if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
+        message.channel.send(J_PlayerList[J_Number - 1] + "さんを殺害します。");
+      }
+    }
   
   function J_PLAY_DAY2_DAYTIME() {
     message.channel.send("2日目 朝");
