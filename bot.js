@@ -22,24 +22,25 @@ client.on('ready', () => {
 var cnt;
 
 var J_PlayerCount = 0;
-var J_PlayerList = [J_PLAYER_LIMIT];
-var J_PlayerJobs = [J_PLAYER_LIMIT];
+var J_PlayerList = [];
+var J_PlayerJobs = [];
 var J_PlayerList_Select = "";
 var J_MurderTo;
 var J_Fortune_To;
 var J_FortuneWatcher = 0;
-var J_MurderVote = [J_PLAYER_LIMIT];
+var J_MurderVote = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 var J_STATUS = 0;
 /*
 
 0 実行なし
-1
+1 待機中
 2 一日目 昼
 3 一日目 夜
 4 二日目 朝
 5 二日目 夜
 6 三日目 朝
+
 */
 
 client.on('message', async message => {
@@ -67,6 +68,7 @@ client.on('message', async message => {
     
     J_PlayerList[J_PlayerCount] = JoinUser;
     J_PlayerCount++;
+    J_STATUS = 1;
     message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id +"> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
     
     if(J_Debug == 1) {
@@ -80,6 +82,8 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY1_DAYTIME() {
+    
+    J_STATUS = 2;
     
     //役職配布
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
@@ -114,6 +118,8 @@ client.on('message', async message => {
   
   function J_PLAY_DAY1_NIGHT() {
     
+    J_STATUS = 3;
+    
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
       J_PlayerList_Select += cnt+1 + "： <@" + J_PlayerList[cnt] + ">\n";
     }
@@ -125,7 +131,7 @@ client.on('message', async message => {
     
   }
   
-  if(message.content <= J_PLAYER_LIMIT && J_STATUS == 1) {
+  if(message.content <= J_PLAYER_LIMIT && J_STATUS == 3) {
     
       let J_Number = message.content;
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
@@ -146,6 +152,8 @@ client.on('message', async message => {
   
   function J_PLAY_DAY2_DAYTIME() {
     
+    J_STATUS = 4;
+    
     if(!J_MurderTo) {
       J_MurderTo = J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)];
     }
@@ -158,6 +166,8 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY2_NIGHT() {
+    
+    J_STATUS = 5;
     
     let J_Number = "";
     
@@ -174,14 +184,14 @@ client.on('message', async message => {
     setTimeout(J_PLAY_DAY3_DAYTIME,10000);
   }
   
-  if(message.content <= J_PLAYER_LIMIT) {
+  if(message.content <= J_PLAYER_LIMIT && J_STATUS == 5) {
     
       let J_Number = message.content;
 
-      if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerList.indexOf(message.author)]) {
+      if(message.channel.type == "dm" && message.author == J_PlayerListJ_PlayerList.indexOf(message.author)) {
         message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
         
-        J_MurderVote[J_PlayerList.indexOf(J_PlayerList[J_Number - 1])] += 1;
+        J_MurderVote[J_PlayerList[J_Number - 1]] += 1;
         
         message.channel.send("投票状況：" + J_MurderVote);
         
@@ -190,7 +200,10 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY3_DAYTIME() {
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\nさて、点呼を取るとなんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n\n",inline: false},]}});
+    
+    J_STATUS = 6;
+    
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n\n",inline: false},]}});
   }
   
 });
