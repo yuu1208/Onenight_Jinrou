@@ -7,6 +7,8 @@ var J_PlayerCount = 0;
 var J_PlayerList = [];
 var J_PlayerJobs = [];
 var J_PlayerList_Select = "";
+var J_MurderTo;
+var J_Fortune_To;
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
@@ -101,29 +103,27 @@ client.on('message', async message => {
     
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 人狼",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 占い師",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
-    
     message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 1日目・夜",value: "すっかり日が暮れて、夜になりました。\n人狼と占い師の方には、個人にてチャットを送信します。他の方は朝になるまで待ちましょう！",inline: false},]}});
-    
-    
-    
-    setTimeout(J_PLAY_DAY2_DAYTIME,60000);
+    setTimeout(J_PLAY_DAY2_DAYTIME,5000);
     
   }
   
   if(message.content <= J_PLAYER_LIMIT) {
-      
+    
       let J_Number = message.content;
-      
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
-        message.channel.send(J_PlayerList[J_Number - 1] + "さんを占います。");
+        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占います。");
+        J_Fortune_To = J_PlayerList[J_Number - 1];
       }
       else if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
-        message.channel.send(J_PlayerList[J_Number - 1] + "さんを殺害します。");
+        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを殺害します。");
+        J_MurderTo = J_PlayerList[J_Number - 1];
       }
     }
   
   function J_PLAY_DAY2_DAYTIME() {
-    message.channel.send("2日目 朝");
+    message.channel.send(
+      {embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n残念なことに、" + J_Jobs[J_PlayerJobs.indexOf(J_MurderTo)] + "の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
   }
   
 
