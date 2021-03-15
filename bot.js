@@ -9,6 +9,7 @@ var J_PlayerJobs = [];
 var J_PlayerList_Select = "";
 var J_MurderTo;
 var J_Fortune_To;
+var FortuneWatcher = 0;
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
@@ -112,8 +113,14 @@ client.on('message', async message => {
     
       let J_Number = message.content;
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
-        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占います。");
-        J_Fortune_To = J_PlayerList[J_Number - 1];
+        if(FortuneWatcher == 0) {
+          J_Fortune_To = J_PlayerList[J_Number - 1];
+          message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占った結果、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "でした。");
+          FortuneWatcher = 1;
+        }
+        else {
+          message.channel.send("⚠ 占いは１人のみ実行できます。");
+        }
       }
       else if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
         message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを殺害します。");
@@ -122,8 +129,12 @@ client.on('message', async message => {
     }
   
   function J_PLAY_DAY2_DAYTIME() {
-    message.channel.send(
-      {embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n残念なことに、" + J_Jobs[J_PlayerJobs.indexOf(J_MurderTo)] + "の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
+    
+    if(J_MurderTo == "undefined") {
+      J_MurderTo = J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)];
+    }
+    
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n残念なことに、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は **3分** です。",inline: false},]}});
   }
   
 
