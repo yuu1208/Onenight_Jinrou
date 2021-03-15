@@ -3,7 +3,7 @@ const client = new Discord.Client();
 
 var cnt;
 
-var J_PlayerCount = 0;
+var J_PlayerCount = -1;
 var J_PlayerList = [];
 var J_PlayerJobs = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
@@ -14,7 +14,7 @@ var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
   let J_PLAYER_LIMIT = 4;
 
 //デバッグモード
-  let J_debug = 1;
+  let J_Debug = 1;
 
 //待ち時間
   const j_wait = 180000;
@@ -32,9 +32,10 @@ client.on('message', async message => {
     J_ready(message.member.user);
   }
   
+  //開始準備
   function J_ready(JoinUser) {
     
-    if(J_PLAYER_LIMIT <= 2 || J_debug >= 2) {
+    if(J_PLAYER_LIMIT <= 2 || J_Debug >= 2) {
       message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "**ワンナイト人狼**を実行する際に問題が発生しました。恐れ入りますが管理人をお呼び下さい。",inline: false},]}});
       return;
     }
@@ -47,6 +48,10 @@ client.on('message', async message => {
     J_PlayerCount++;
     J_PlayerList[J_PlayerCount] = JoinUser;
     message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id +"> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
+    
+    if(J_Debug == 1) {
+      message.channel.send('参加プレイヤーID: ' + J_PlayerList + '\n[人数カウント: ' + J_PlayerCount + '人 ｜ 開始まであと: ' + (J_PLAYER_LIMIT - J_PlayerCount) + "人 ｜ 許容上限人数: "+ J_PLAYER_LIMIT + "人]");
+    }
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
       message.channel.send(":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。これよりゲームを開始します！");
@@ -62,16 +67,24 @@ client.on('message', async message => {
     }
     
     //占い師選抜
-    J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)] = 1;
+    J_PlayerJobs[Math.floor(Math.random() * J_PLAYER_LIMIT)] = 1;
     
+    //人狼選抜
+    //占い師と同じIDにならなくなるまで選抜を繰り返す
     let J_JinrohRand = Math.floor(Math.random() * J_PLAYER_LIMIT);
-    
     while(J_PlayerJobs.indexOf(1) == J_JinrohRand) {
       J_JinrohRand = Math.floor(Math.random() * J_PLAYER_LIMIT);
     }
-    
     J_PlayerJobs[J_JinrohRand] = 2;
     
+    //プレイヤー全員に割り振られた役職をDMで伝える
+    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+      client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： あなたの役職",value: "あなたは **" + J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、ゲーム画面に戻ってください。",inline: false},]}});
+    }
+    
+    if(J_Debug == 1) {
+      message.channel.send("職業カードID: " + J_PlayerJobs);
+    }
     
   }
   
