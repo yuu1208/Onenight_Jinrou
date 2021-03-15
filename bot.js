@@ -1,17 +1,10 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-var cnt;
+client.on('ready', () => {
+  console.log("[INFO] " + `${client.user.tag} にログインしました`);
+});
 
-var J_PlayerCount = 0;
-var J_PlayerList = [];
-var J_PlayerJobs = [];
-var J_PlayerList_Select = "";
-var J_MurderTo;
-var J_Fortune_To;
-var J_FortuneWatcher = 0;
-var J_MurderVote = [];
-var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
@@ -26,6 +19,28 @@ var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
+var cnt;
+
+var J_PlayerCount = 0;
+var J_PlayerList = [J_PLAYER_LIMIT];
+var J_PlayerJobs = [J_PLAYER_LIMIT];
+var J_PlayerList_Select = "";
+var J_MurderTo;
+var J_Fortune_To;
+var J_FortuneWatcher = 0;
+var J_MurderVote = [J_PLAYER_LIMIT];
+var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
+var J_STATUS = 0;
+/*
+
+0 実行なし
+1
+2 一日目 昼
+3 一日目 夜
+4 二日目 朝
+5 二日目 夜
+6 三日目 朝
+*/
 
 client.on('message', async message => {
   
@@ -110,7 +125,7 @@ client.on('message', async message => {
     
   }
   
-  if(message.content <= J_PLAYER_LIMIT) {
+  if(message.content <= J_PLAYER_LIMIT && J_STATUS == 1) {
     
       let J_Number = message.content;
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
@@ -163,9 +178,14 @@ client.on('message', async message => {
     
       let J_Number = message.content;
 
-      if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
-        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを殺害します。");
-        J_MurderTo = J_PlayerList[J_Number - 1];
+      if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerList.indexOf(message.author)]) {
+        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
+        
+        J_MurderVote[J_PlayerList.indexOf(J_PlayerList[J_Number - 1])] += 1;
+        
+        message.channel.send("投票状況：" + J_MurderVote);
+        
+        //投票ユーザーをplayerlistから検索してその添字の場所にvoteにつっこむ。
       }
   }
   
