@@ -83,7 +83,7 @@ client.on('message', async message => {
     
     //プレイヤー全員に割り振られた役職をDMで伝える
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
-      client.users.fetch(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： あなたの役職",value: "あなたは **" + J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、ゲーム画面に戻ってください。",inline: false},]}});
+      client.users.cache.get(J_PlayerList[cnt]).send('a');
     }
     
     
