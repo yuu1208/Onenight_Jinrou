@@ -9,7 +9,8 @@ var J_PlayerJobs = [];
 var J_PlayerList_Select = "";
 var J_MurderTo;
 var J_Fortune_To;
-var FortuneWatcher = 0;
+var J_FortuneWatcher = 0;
+var J_MurderVote = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
@@ -113,10 +114,10 @@ client.on('message', async message => {
     
       let J_Number = message.content;
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
-        if(FortuneWatcher == 0) {
+        if(J_FortuneWatcher == 0) {
           J_Fortune_To = J_PlayerList[J_Number - 1];
           message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占った結果、``" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "``でした。");
-          FortuneWatcher = 1;
+          J_FortuneWatcher = 1;
         }
         else {
           message.channel.send("⚠ 占える回数は一度のみです。");
@@ -126,7 +127,7 @@ client.on('message', async message => {
         message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを殺害します。");
         J_MurderTo = J_PlayerList[J_Number - 1];
       }
-    }
+  }
   
   function J_PLAY_DAY2_DAYTIME() {
     
@@ -142,14 +143,35 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY2_NIGHT() {
+    
+    let J_Number = "";
+    
     message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。もっとも票の多かった方は、次の日の朝に殺害されてしまいます。あなたが人狼だと思う人に票を入れてください。なお投票は1回・1人のみですので、お間違えの内容にお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
-      if()
-      client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
+      if(J_MurderTo != J_PlayerList[cnt]) {
+        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は **30秒** です。\n\n" + J_PlayerList_Select,inline: false},]}});
+      }
+      else {
+        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは既に人狼に殺害されたため、投票を行うことができません。",inline: false},]}});
+      }
     }
+    setTimeout(J_PLAY_DAY3_DAYTIME,10000);
   }
+  
+  if(message.content <= J_PLAYER_LIMIT) {
+    
+      let J_Number = message.content;
 
+      if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
+        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを殺害します。");
+        J_MurderTo = J_PlayerList[J_Number - 1];
+      }
+  }
+  
+  function J_PLAY_DAY3_DAYTIME() {
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\nさて、点呼を取るとなんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n\n",inline: false},]}});
+  }
   
 });
 client.login(process.env.DISCORD_BOT_TOKEN)
