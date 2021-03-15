@@ -48,6 +48,21 @@ client.on('message', async message => {
   //再帰呼び出し対策： BOTが話した語句には応答しない。
   if(message.author.id == client.user.id) {return}
   
+  if(message.content == "人狼強制終了") {
+    message.channel.send("強制終了します。");
+    J_PlayerCount = 0;
+    J_PlayerList = [];
+    J_PlayerJobs = [];
+    J_PlayerList_Select = "";
+    J_MurderTo = "";
+    J_Fortune_To  ="";
+    J_FortuneWatcher = 0;
+    J_MurderVote = [];
+    J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
+    J_STATUS = 0;
+    
+  }
+  
   if(message.content == "人狼参加") {
     message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加処理中",value: "<@" + message.author.id +"> \n参加依頼を受け付けました。\nただいま処理中です、しばらくお待ち下さい！",inline: false},]}});
     J_ready(message.member.id);
