@@ -56,16 +56,16 @@ client.on('message', async message => {
     J_PlayerList_Select = "";
     J_MurderTo = "";
     J_Fortune_To  ="";
-    J_FortuneWatcher = 0;
     J_MurderVote = [];
-    J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
     J_STATUS = 0;
     
   }
   
-  if(message.content == "人狼参加") {
-    message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加処理中",value: "<@" + message.author.id +"> \n参加依頼を受け付けました。\nただいま処理中です、しばらくお待ち下さい！",inline: false},]}});
-    J_ready(message.member.id);
+  if(message.content == "人狼") {
+    if(message.channel.type != "dm") {
+      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加処理中",value: "<@" + message.author.id +"> \n参加依頼を受け付けました。\nただいま処理中です、しばらくお待ち下さい！",inline: false},]}});
+      J_ready(message.member.id);
+    }
   }
   
   //開始準備
@@ -150,10 +150,9 @@ client.on('message', async message => {
     
       let J_Number = message.content;
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
-        if(J_FortuneWatcher == 0) {
+        if(!J_Fortune_To) {
           J_Fortune_To = J_PlayerList[J_Number - 1];
           message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんを占った結果、``" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "``でした。");
-          J_FortuneWatcher = 1;
         }
         else {
           message.channel.send("⚠ 占える回数は一度のみです。");
@@ -221,7 +220,7 @@ client.on('message', async message => {
     
     J_STATUS = 6;
     
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。\n\n",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + "Undefined" + "**の <@" + "Undefined" + "> さんが人狼に殺害されてしまいました。\n\n",inline: false},]}});
   }
   
 });
