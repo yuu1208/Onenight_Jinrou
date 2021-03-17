@@ -9,10 +9,10 @@ client.on('ready', () => {
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 4;
+  let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
-  let J_Debug = 1;
+  let J_Debug = 0;
 
 //待ち時間
   const J_WAIT_TIME = 60000;
@@ -32,6 +32,7 @@ var J_FortuneWatcher = 0;
 var J_MurderVote = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 var J_STATUS = 0;
+var J_Message;
 
 /*
 
@@ -186,7 +187,7 @@ client.on('message', async message => {
     
     let J_Number = "";
     
-    message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。もっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。なお投票は1回・1人のみですので、お間違えの内容にお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
+    message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。\nもっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。\nなお投票は1回・1人のみですので、お間違えの内容にお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
       if(J_MurderTo != J_PlayerList[cnt]) {
@@ -221,7 +222,14 @@ client.on('message', async message => {
     
     J_STATUS = 6;
     
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + "Undefined" + "**の <@" + "Undefined" + "> さんが人狼に殺害されてしまいました。\n\n",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
+    
+    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] != "人狼") {
+      J_Message = "村人 & 占い師チームの勝利です！";
+    }
+    else if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "人狼") {
+      J_Message = "人狼の勝ちなので、あんた勝者";
+    }
   }
   
 });
