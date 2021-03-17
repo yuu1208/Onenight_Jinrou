@@ -33,6 +33,7 @@ var J_MurderVote = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 var J_STATUS = 0;
 var J_Message;
+var J_VoteWatcher;
 
 /*
 
@@ -204,21 +205,32 @@ client.on('message', async message => {
     
     setTimeout(J_PLAY_DAY3_DAYTIME,J_ToWaitTime);
   }
+
+  //ここでcntを初期化
+  cnt = 0;
   
   if(message.content <= J_PLAYER_LIMIT && J_STATUS == 5) {
     
       let J_Number = message.content;
-    
-    
+      
     
       if(message.channel.type == "dm" && J_MurderTo != message.author) {
         message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
         
+        if(J_VoteWatcher.includes(message.author)) {
+          message.channel.send("⚠ 投票は一度のみです");
+        }
+        else {
+          J_VoteWatcher[cnt] = message.author;
+          cnt++;
+        }
+        
         J_MurderVote[J_Number - 1] += 1;
         
-        message.channel.send("投票状況：" + J_MurderVote);
+        if(J_Debug == 1) {
+          message.channel.send("投票状況：" + J_MurderVote + "\n投票者：" + J_VoteWatcher);
+        }
         
-        //投票ユーザーをplayerlistから検索してその添字の場所にvoteにつっこむ。
       }
       else {
         message.channel.send("⚠ 投票対象者ではありません");
@@ -229,6 +241,8 @@ client.on('message', async message => {
   function J_PLAY_DAY3_DAYTIME() {
     
     J_STATUS = 6;
+    
+    
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
