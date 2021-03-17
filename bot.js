@@ -12,7 +12,7 @@ client.on('ready', () => {
   let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
-  let J_Debug = 0;
+  let J_Debug = 1;
 
 //待ち時間
   const J_WAIT_TIME = 10000;
@@ -33,7 +33,7 @@ var J_MurderVote = [];
 var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
 var J_STATUS = 0;
 var J_Message;
-var J_VoteWatcher;
+var J_VoteWatcher = [];
 
 /*
 
@@ -62,6 +62,8 @@ client.on('message', async message => {
     J_Fortune_To  ="";
     J_MurderVote = [];
     J_STATUS = 0;
+    3
+    J_VoteWatcher = [];
     
   }
   
@@ -215,20 +217,19 @@ client.on('message', async message => {
       
     
       if(message.channel.type == "dm" && J_MurderTo != message.author) {
-        message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
         
         if(J_VoteWatcher.includes(message.author)) {
           message.channel.send("⚠ 投票は一度のみです");
         }
+        
         else {
           J_VoteWatcher[cnt] = message.author;
           cnt++;
-        }
-        
-        J_MurderVote[J_Number - 1] += 1;
-        
-        if(J_Debug == 1) {
-          message.channel.send("投票状況：" + J_MurderVote + "\n投票者：" + J_VoteWatcher);
+          J_MurderVote[J_Number - 1] += 1;
+          message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
+          if(J_Debug == 1) {
+            message.channel.send("投票状況：" + J_MurderVote + "\n投票者：" + J_VoteWatcher);
+          }
         }
         
       }
