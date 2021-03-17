@@ -15,7 +15,7 @@ client.on('ready', () => {
   let J_Debug = 0;
 
 //待ち時間
-  const J_WAIT_TIME = 60000;
+  const J_WAIT_TIME = 10000;
   const J_ToWaitTime = 30000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
@@ -197,25 +197,33 @@ client.on('message', async message => {
         client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは既に人狼に殺害されたため、投票を行うことができません。",inline: false},]}});
       }
     }
+    
+    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+      J_MurderVote[cnt] = 0;
+    }
+    
     setTimeout(J_PLAY_DAY3_DAYTIME,J_ToWaitTime);
   }
   
   if(message.content <= J_PLAYER_LIMIT && J_STATUS == 5) {
     
       let J_Number = message.content;
-
-      if(message.channel.type == "dm" && J_PlayerList.includes(message.author.id)) {
+    
+    
+    
+      if(message.channel.type == "dm" && J_MurderTo != message.author) {
         message.channel.send("<@" + J_PlayerList[J_Number - 1] + "> さんに投票しました。");
         
-        J_MurderVote[J_PlayerList[J_Number - 1]] += 1;
+        J_MurderVote[J_Number - 1] += 1;
         
         message.channel.send("投票状況：" + J_MurderVote);
         
         //投票ユーザーをplayerlistから検索してその添字の場所にvoteにつっこむ。
       }
-    else {
-      message.channel.send("⚠ 投票対象者ではありません");
-    }
+      else {
+        message.channel.send("⚠ 投票対象者ではありません");
+      }
+
   }
   
   function J_PLAY_DAY3_DAYTIME() {
@@ -224,10 +232,10 @@ client.on('message', async message => {
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
-    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] != "人狼") {
+    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "人狼") {
       J_Message = "村人 & 占い師チームの勝利です！";
     }
-    else if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "人狼") {
+    else {
       J_Message = "人狼の勝ちなので、あんた勝者";
     }
   }
