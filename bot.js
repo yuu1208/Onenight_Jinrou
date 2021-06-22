@@ -15,7 +15,7 @@ client.on('ready', () => {
   let J_Debug = 1;
 
 //待ち時間
-  const J_WAIT_TIME = 10000;
+  const J_WAIT_TIME = 1;
   const J_ToWaitTime = 30000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
