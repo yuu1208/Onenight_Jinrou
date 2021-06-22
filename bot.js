@@ -110,6 +110,9 @@ client.on('message', async message => {
     if(message.channel.type != "dm") {
       J_ready(message.member.id);
     }
+    else {
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "人狼ゲームの参加は個人チャットで行えません。",inline: false},]}});
+    }
   }
   
   //開始準備
