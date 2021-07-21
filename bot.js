@@ -15,7 +15,7 @@ client.on('ready', () => {
   let J_Debug = 1;
 
 //待ち時間
-  const J_WAIT_TIME = 1;
+  const J_WAIT_TIME = 60000;
   const J_ToWaitTime = 30000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
@@ -47,44 +47,6 @@ var J_VoteWatcher = [];
 
 */
 
-client.on('message', async m => {
-  
-  const ytdl = require('ytdl-core');
-  var channel = m.member.voice.channel;
-  
-  if(m.content == '!dc') {
-    m.channel.send("再生を中止します。");
-    channel.leave();
-  } 
-  
-   if (m.content.startsWith('#play') && m.guild) {
-     
-     const url = m.content.split('y ')[1]
-     if (!ytdl.validateURL(url)) return m.channel.send('選択したリンクから動画を読み込めませんでした。動画が削除されていませんか？');
-     // コマンドを実行したメンバーのボイスチャンネル指定
-     let channel = m.member.voice.channel
-     // コマンドを実行したメンバーがボイスチャンネルに入ってなければ処理を止める
-     if (!channel) return m.channel.send('あなたが先に、いずれかのボイスチャンネルに参加する必要があります。');
-     // チャンネルに参加
-     m.channel.send('Internet Musicを再生します。');
-     client.user.setActivity("動画",/*9文字*/ { type: 'PLAYING' });
-     const connection = await channel.join()
-     // 動画の音源を取得
-     const stream = ytdl(ytdl.getURLVideoID(url), { filter: 'audioonly' })
-     // 再生
-     const dispatcher = connection.play(stream)
-     
-     
-     // 再生が終了したら抜ける
-     dispatcher.once('finish', () => {
-       m.channel.send("動画が終了しました。");
-       channel.leave()
-     })
-   }
-   
- })
-
-
 client.on('message', async message => {
   
   
@@ -101,7 +63,6 @@ client.on('message', async message => {
     J_Fortune_To  ="";
     J_MurderVote = [];
     J_STATUS = 0;
-    3
     J_VoteWatcher = [];
     
   }
