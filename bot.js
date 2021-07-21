@@ -12,11 +12,13 @@ client.on('ready', () => {
   let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
-  let J_Debug = 1;
+  let J_Debug = 0;
 
-//待ち時間
+//話し合いの待ち時間
   const J_WAIT_TIME = 60000;
-  const J_ToWaitTime = 30000;
+
+//投票・占いの待ち時間
+  const J_ToWaitTime = 60000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -72,7 +74,7 @@ client.on('message', async message => {
       J_ready(message.member.id);
     }
     else {
-      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "人狼ゲームの参加は個人チャットで行えません。",inline: false},]}});
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "ゲームへの参加はサーバーで行ってください。",inline: false},]}});
     }
   }
   
@@ -148,8 +150,11 @@ client.on('message', async message => {
     }
     
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 人狼",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
+    
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 占い師",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
+    
     message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 1日目・夜",value: "すっかり日が暮れて、夜になりました。\n人狼と占い師の方には、個人にてチャットを送信します。他の方は朝になるまで待ちましょう！",inline: false},]}});
+    
     setTimeout(J_PLAY_DAY2_DAYTIME,J_ToWaitTime);
     
   }
