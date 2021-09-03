@@ -49,6 +49,10 @@ var J_GameChannel;
 
 */
 
+function rand() {
+  
+}
+
 const aryMax = function (a, b) {return Math.max(a, b);}
 
 client.on('message', async message => {
@@ -152,7 +156,7 @@ client.on('message', async message => {
       client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： あなたの役職",value: "あなたは **"+ J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、<#" + J_GameChannel + ">に戻ってください。",inline: false},]}});
     }
   
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 1日目・昼",value: "なんてうつくしい快晴な空なのでしょう！\nさて、プレイヤーの皆様には、個人チャットであなたの職業を送信しました。確認を行った人から、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 1日目・昼",value: "**ようこそ、人狼の館へ。**\n\nプレイヤーの皆様には、個人チャットであなたの職業を送信しました。確認を行った人から、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。",inline: false},]}});
     setTimeout(J_PLAY_DAY1_NIGHT,J_WAIT_TIME);
     
     return;
@@ -201,7 +205,7 @@ client.on('message', async message => {
     if(!J_MurderTo) {
       J_MurderTo = J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)];
     }
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n残念なことに、**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが人狼に殺害されてしまいました。**\n\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n**そして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが血まみれの状態で倒れていました。**\n\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。",inline: false},]}});
     setTimeout(J_PLAY_DAY2_NIGHT,J_WAIT_TIME);
   }
   
@@ -282,7 +286,7 @@ client.on('message', async message => {
     J_MurderTo = J_PlayerList[day2_night_dead];
     
     if(J_Debug == 1) {
-      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "殺害ターゲット： ```" + J_PlayerList[day2_night_dead]  + "```\n投票数： ```" + J_MurderVote.reduce(aryMax) + "```\n\n最も投票が多かった人の対象添え字： ```" + J_MurderVote.indexOf(max_vote) + "```",inline: false},]}});
+      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "殺害ターゲット： ```" + J_PlayerList[day2_night_dead]  + "```\n投票数： ```" + J_MurderVote.reduce(aryMax) + "```\n最も投票が多かった人の対象添え字： ```" + J_MurderVote.indexOf(max_vote) + "```",inline: false},]}});
     }
     
     
@@ -293,7 +297,7 @@ client.on('message', async message => {
       J_Message = "このあと、村人たちは狼にきれいに食べられてしまったとさ。";
     }
     
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイにに１台なくなっている…\nみんなは恐る恐る、館を探し始めた。そうすると、 **<@" + J_PlayerList[rand()] + ">** さんが外にバラバラの状態のベッドを見つけた。\n\nこれはなにかおかしいと考え始めた **" + J_PlayerList[rand()] + "** さんはクローゼットや屋根裏を探すと、なんと予想通りに、首のあたりにかじられたような跡がある、**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、血だらけの状態でクローゼットに隠されていました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
     J_PlayerCount = 0;
     J_PlayerList = [];
