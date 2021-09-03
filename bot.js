@@ -105,13 +105,8 @@ client.on('message', async message => {
     
     
     if(J_Debug == 1) {
-      let J_PlayerList_Debug;
-      
-      for(cnt = 0; cnt < J_PlayerList.length; cnt++) {
-        J_PlayerList_Debug =+ "<@" +  message.member.id + ">\n";
-      }
-      
-      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "プレイ待機中： ``" + J_PlayerCount + "``人\n人狼開始まで： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``人\n上限： ``" + J_PLAYER_LIMIT + "``人\n\n参加プレイヤー：\n\n" + J_PlayerList_Debug ,inline: false},]}});
+
+      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "プレイ待機中： ``" + J_PlayerCount + "``人\n人狼開始まで： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``人\n　　最大人数： ``" + J_PLAYER_LIMIT + "``人\n\n参加プレイヤー：\n\n" + J_PlayerList ,inline: false},]}});
     }
     
     
