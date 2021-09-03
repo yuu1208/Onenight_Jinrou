@@ -18,7 +18,7 @@ client.on('ready', () => {
   const J_WAIT_TIME = 60000;
 
 //投票・占いの待ち時間
-  const J_ToWaitTime = 30000;
+  const J_ToWaitTime = 60000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
