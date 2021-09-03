@@ -100,7 +100,7 @@ client.on('message', async message => {
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
       
-      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id +"> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
+      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
     }
     
     
@@ -111,7 +111,7 @@ client.on('message', async message => {
         J_PlayerList_Debug =+ "<@" +  message.member.id + ">\n";
       }
       
-      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "ゲーム参加： ``" + J_PlayerCount + "``\n開始まで後： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``\n最大受付数： ``" + J_PLAYER_LIMIT +"``\n\n参加プレイヤー：\n\n"+J_PlayerList_Debug ,inline: false},]}});
+      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "プレイ待機中： ``" + J_PlayerCount + "``人\n人狼開始まで： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``人\n上限： ``" + J_PLAYER_LIMIT + "``人\n\n参加プレイヤー：\n\n" + J_PlayerList_Debug ,inline: false},]}});
     }
     
     
