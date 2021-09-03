@@ -122,17 +122,14 @@ client.on('message', async message => {
     }
     J_STATUS = 1;
     
-    // if(J_PlayerList.includes(message.member.id)) {
-    //   message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
-    // }
-    if(1==1) {
+    if(J_PlayerList.includes(message.member.id)) {
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
+    }
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
       
       message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。ゲームに参加した方は、BOTの指示に従いゲームを楽しんで下さい！",inline: false},]}});
-    }
-    
-    
+
     if(J_Debug == 1) {
       
       let J_PlayerList_Select = "";
@@ -279,7 +276,7 @@ client.on('message', async message => {
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
       if(J_MurderTo != J_PlayerList[cnt]) {
-        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。\n\n最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n\なお現在、１日目で殺害された <@" + J_MurderTo + ">さんは投票を行うことが出来ません。また、この人に投票することも出来ません。n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
+        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 投票",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。\n\n最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n\なお現在、１日目で殺害された <@" + J_MurderTo + ">さんは投票を行うことが出来ません。また、この人に投票することも出来ません。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
       }
       else {
         client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： You are dead!!",value: "2日目の夜になりました。\nあなたは既に人狼に殺害されたため、投票を行うことができません。",inline: false},]}});
@@ -350,7 +347,7 @@ client.on('message', async message => {
       J_Message = "居間で倒れていました。**\n\nそして、遺体が静かに消えていき、同時に館の鍵が開いた音がした！\n\n村人たちは、二度とくるまいと、さっそうと館を後にした。";
     }
     else {
-      J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは変えることが出来ず、全員帰らぬ人となってしまいました。";
+      J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは帰ることが出来ず、次の日、全員 <@" + J_PlayerList[J_PlayerJobs.indexOf(2)] + "> に殺され、帰らぬ人となってしまいました。";
     }
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。その瞬間・・・\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
