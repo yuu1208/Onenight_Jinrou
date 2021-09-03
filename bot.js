@@ -15,10 +15,10 @@ client.on('ready', () => {
   let J_Debug = 1;
 
 //話し合いの待ち時間
-  const J_WAIT_TIME = 60000;
+  const J_WAIT_TIME = 5000;
 
 //投票・占いの待ち時間
-  const J_ToWaitTime = 60000;
+  const J_ToWaitTime = 5000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -92,11 +92,11 @@ client.on('message', async message => {
     }
     J_STATUS = 1;
     
-    if(J_PlayerList.includes(message.member.id)) {
-      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
-    }
+    // if(J_PlayerList.includes(message.member.id)) {
+    //   message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
+    // }
     
-    else {
+    if(1==1) {
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
       
@@ -156,7 +156,7 @@ client.on('message', async message => {
     J_STATUS = 3;
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
-      J_PlayerList_Select += cnt+1 + "： <@" + J_PlayerList[cnt] + ">\n";
+      J_PlayerList_Select += "``" + (cnt + 1) + "``： <@" + J_PlayerList[cnt] + ">\n";
     }
     
     client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 人狼",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザーを選び、チャットに __番号で__ 送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
