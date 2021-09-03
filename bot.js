@@ -213,6 +213,11 @@ client.on('message', async message => {
     
     let J_Number = "";
     
+    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+      J_MurderVote[cnt] = 0;
+    }
+    
+    
     message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。\nもっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。\nなお投票は1回・1人のみですので、お間違えの内容にお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
@@ -224,9 +229,6 @@ client.on('message', async message => {
       }
     }
     
-    for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
-      J_MurderVote[cnt] = 0;
-    }
     
     setTimeout(J_PLAY_DAY3_DAYTIME,J_ToWaitTime);
   }
