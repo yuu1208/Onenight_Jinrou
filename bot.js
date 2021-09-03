@@ -82,7 +82,7 @@ client.on('message', async message => {
   function J_ready(JoinUser) {
     
     if(J_PLAYER_LIMIT <= 2 || J_Debug >= 2) {
-      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "**ワンナイト人狼**を実行する際に問題が発生しました。恐れ入りますが管理人をお呼び下さい。",inline: false},]}});
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "**ワンナイト人狼**を実行する際に問題が発生しました。",inline: false},]}});
       return;
     }
     
@@ -255,7 +255,7 @@ client.on('message', async message => {
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
-    if( == "人狼") {
+    if("a" == "人狼") {
       J_Message = "村人 & 占い師チームの勝利です！";
     }
     else {
