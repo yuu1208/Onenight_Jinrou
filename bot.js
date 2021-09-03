@@ -12,7 +12,7 @@ client.on('ready', () => {
   let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
-  let J_Debug = 0;
+  let J_Debug = 1;
 
 //話し合いの待ち時間
   const J_WAIT_TIME = 60000;
@@ -55,7 +55,7 @@ client.on('message', async message => {
   //再帰呼び出し対策： BOTが話した語句には応答しない。
   if(message.author.id == client.user.id) {return}
   
-  if(message.content == "人狼強制終了") {
+  if(message.content == "強制終了") {
     message.channel.send("強制終了します。");
     J_PlayerCount = 0;
     J_PlayerList = [];
@@ -71,12 +71,7 @@ client.on('message', async message => {
   
   if(message.content.match(/人狼|jinrou|じんろう/)) {
     if(message.channel.type != "dm") {
-      if(J_ready.find(message.member.id)) {
-        message.channel.send("あなたはすでに参加しています！");
-      }
-      else {
-        J_ready.indexOf(message.member.id);
-      }
+      J_ready(message.member.id);
     }
     else {
       message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "ゲームへの参加はサーバーで行ってください。",inline: false},]}});
@@ -96,13 +91,19 @@ client.on('message', async message => {
       return;
     }
     
-    J_PlayerList[J_PlayerCount] = JoinUser;
-    J_PlayerCount++;
-    J_STATUS = 1;
-    message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id +"> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
+    if(J_PlayerList.includes(message.member.id) == true) {
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
+    }
     
     if(J_Debug == 1) {
       message.channel.send('参加プレイヤーID: ' + J_PlayerList + '\n[人数カウント: ' + J_PlayerCount + '人 ｜ 開始まであと: ' + (J_PLAYER_LIMIT - J_PlayerCount) + "人 ｜ 許容上限人数: "+ J_PLAYER_LIMIT + "人]");
+    }
+    
+    else {
+      J_PlayerList[J_PlayerCount] = JoinUser;
+      J_PlayerCount++;
+      J_STATUS = 1;
+      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id +"> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
     }
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
