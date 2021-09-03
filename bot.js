@@ -15,10 +15,10 @@ client.on('ready', () => {
   let J_Debug = 0;
 
 //話し合いの待ち時間
-  const J_WAIT_TIME = 15000;
+  const J_WAIT_TIME = 10000;
 
 //投票・占いの待ち時間
-  const J_ToWaitTime = 15000;
+  const J_ToWaitTime = 10000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -101,7 +101,7 @@ client.on('message', async message => {
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
       
-      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
+      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。",inline: false},]}});
     }
     
     
@@ -220,7 +220,7 @@ client.on('message', async message => {
     }
     
     
-    message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。\nもっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。\nなお投票は1回・1人のみですので、お間違えの内容にお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
+    message.channel.send({embed: {color: 0x536DFE,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、投票で誰を殺害するかを決定します。\nもっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。\nなお投票は1回・1人のみですので、お間違えのないようにお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
       if(J_MurderTo != J_PlayerList[cnt]) {
@@ -281,8 +281,8 @@ client.on('message', async message => {
     J_MurderTo = J_PlayerList[day2_night_dead];
     
     
-    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "2") {
-      J_Message = "おめてどうございます！村人 & 占い師チームの勝利です！";
+    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]].match(/人狼/)) {
+      J_Message = "おめでとうございます！村人 & 占い師チームの勝利です！";
     }
     else {
       J_Message = "このあと、村人たちは狼にきれいに食べられてしまったとさ。";
