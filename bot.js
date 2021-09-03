@@ -215,14 +215,14 @@ client.on('message', async message => {
       J_MurderTo = J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)];
     }
     if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]].match(/人狼/)) {
-      J_Message = "キッチンで自分を包丁で刺し、出血性ショックで死亡しました。\n\n人狼が自殺したので、脱出できなかった館から窓を割って脱出し、自分たちの町へ帰ったのであった。\n\nこれにてゲームを終了します。";
+      J_Message = "キッチンで自分を包丁で刺し、出血性ショックで死亡しました。**\n\n人狼が自殺したので、脱出できなかった館から窓を割って脱出し、自分たちの町へ帰ったのであった。\n\nこれにてゲームを終了します。";
       dayOneNightJinrouDead = 1;
     }
     else {
       J_Message = "血まみれの状態で倒れていました。**\n\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。";
     }
     
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n**そして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + ">** さんが" + J_Message,inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n**そして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが" + J_Message,inline: false},]}});
     setTimeout(J_PLAY_DAY2_NIGHT,J_WAIT_TIME);
   }
   
@@ -285,7 +285,6 @@ client.on('message', async message => {
       if(message.channel.type == "dm" && J_MurderTo != message.author) {
         
         if(J_VoteWatcher.includes(message.author)) {
-          message.channel.send("⚠ 投票は一度のみです");
           message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "投票は1度しか行なえません！",inline: false},]}});
         }
         
@@ -338,13 +337,7 @@ client.on('message', async message => {
       J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは変えることが出来ず、全員帰らぬ人となってしまいました。";
     }
     
-    let rand_player;
-    
-    while(J_PlayerList[rand()] == J_MurderTo) {
-      rand_player = J_PlayerList[rand()];
-    }
-    
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。そうすると、 **<@" + rand_player + ">** さんが窓から、外にバラバラの状態で落とされたようなベッドを見つけた。\n\nこれは何かがおかしいと考え始めた **<@" + rand_player + ">** さんは、クローゼットや屋根裏を探すと、なんと予想通りに、\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。その瞬間・・・\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
     J_PlayerCount = 0;
     J_PlayerList = [];
