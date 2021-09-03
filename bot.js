@@ -61,6 +61,7 @@ function rand() {
   }
   return result;  
 }
+function ;
 
 const aryMax = function (a, b) {return Math.max(a, b);}
 
