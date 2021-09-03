@@ -5,6 +5,7 @@ client.on('ready', () => {
   console.log("[INFO] " + `${client.user.tag} にログインしました`);
 });
 
+
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
@@ -14,10 +15,10 @@ client.on('ready', () => {
   const J_Debug = 1;
 
 //話し合いの待ち時間 DEFAULT・180000
-  const J_WAIT_TIME = 180000;
+  const J_WAIT_TIME = 15000;
 
 //投票・占いの待ち時間 DEFAULT・60000
-  const J_ToWaitTime = 60000;
+  const J_ToWaitTime = 15000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -37,6 +38,7 @@ let J_Message;
 let J_VoteWatcher = [];
 let J_GameChannel;
 let dayOneNightJinrouDead;
+let Emergency_STOP = 0;
 /*
 
 0 実行なし
@@ -75,6 +77,7 @@ function initializeGameData() {
   J_VoteWatcher = [];
   J_GameChannel;
   dayOneNightJinrouDead;
+  Emergency_STOP = 0;
 }
 
 const aryMax = function (a, b) {return Math.max(a, b);}
@@ -83,11 +86,12 @@ client.on('message', async message => {
   
   
   //再帰呼び出し対策： BOTが話した語句には応答しない。
-  if(message.author.id == client.user.id) {return}
+  if(message.author.bot) {return}
   
   if(message.content == "強制終了") {
     message.channel.send("強制終了します。");
     initializeGameData();
+    Emergency_STOP = 1;
   }
   
   if(message.content.match(/人狼|jinrou|じんろう/)) {
@@ -101,6 +105,8 @@ client.on('message', async message => {
   
   //開始準備
   function J_ready(JoinUser) {
+    
+    if(Emergency_STOP == 1) { return }
     
     if(J_PLAYER_LIMIT <= 2 || J_Debug >= 2) {
       message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "**ワンナイト人狼**を実行する際に問題が発生しました。",inline: false},]}});
@@ -136,11 +142,13 @@ client.on('message', async message => {
     if(J_PLAYER_LIMIT == J_PlayerCount) {
       message.channel.send({embed: {color: 0xAD1457,fields: [{name: ":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。",value: "これよりゲームを開始します！",inline: false},]}});
       J_GameChannel = message.channel.id;
-      setTimeout(J_PLAY_DAY1_DAYTIME,1000);
+      setTimeout(J_PLAY_DAY1_DAYTIME,5000);
     }
   }
   
   function J_PLAY_DAY1_DAYTIME() {
+    
+    if(Emergency_STOP == 1) { return }
     
     J_STATUS = 2;
     
@@ -176,6 +184,7 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY1_NIGHT() {
+    if(Emergency_STOP == 1) { return }
     
     J_STATUS = 3;
     
@@ -212,7 +221,7 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY2_DAYTIME() {
-    
+    if(Emergency_STOP == 1) { return }
     J_STATUS = 4;
     
     if(!J_MurderTo) {
@@ -245,7 +254,7 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY2_NIGHT() {
-    
+    if(Emergency_STOP == 1) { return }
     J_STATUS = 5;
     
     let J_Number = "";
@@ -310,7 +319,7 @@ client.on('message', async message => {
   }
   
   function J_PLAY_DAY3_DAYTIME() {
-    
+    if(Emergency_STOP == 1) { return }
     J_STATUS = 6;
     
     //2日目の夜の殺害データ
@@ -330,7 +339,7 @@ client.on('message', async message => {
       J_Message = "居間で倒れていました。**\n\nそして、遺体が静かに消えていき、同時に館の鍵が開いた音がした！\n\n村人たちは、二度とくるまいと、さっそうと館を後にした。";
     }
     else {
-      J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは変えることが出来ず、次の日全員 <@" + J_PlayerJobs[J_PlayerList.indexOf('2')] + "> に殺されてしまい、帰らぬ人となってしまいました。";
+      J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは帰ることが出来ず、次の日全員 <@" + J_PlayerJobs[J_PlayerList.indexOf('2')] + "> に殺されてしまい、帰らぬ人となってしまいました。";
     }
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。その瞬間・・・\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
