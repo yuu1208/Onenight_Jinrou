@@ -49,6 +49,8 @@ var J_VoteWatcher = [];
 
 */
 
+const aryMax = function (a, b) {return Math.max(a, b);}
+
 client.on('message', async message => {
   
   
@@ -261,7 +263,11 @@ client.on('message', async message => {
       else {
         message.channel.send("⚠ 投票対象者ではありません");
       }
-
+    
+    
+    //2日目の夜の殺害データ
+    let max_vote = J_MurderVote.reduce(aryMax);
+    let day2_night_dead = J_PlayerList.indexOf(max_vote);
   }
   
   function J_PLAY_DAY3_DAYTIME() {
