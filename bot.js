@@ -9,16 +9,16 @@ client.on('ready', () => {
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 5;
+  let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
   let J_Debug = 0;
 
 //話し合いの待ち時間
-  const J_WAIT_TIME = 60000;
+  const J_WAIT_TIME = 15000;
 
 //投票・占いの待ち時間
-  const J_ToWaitTime = 60000;
+  const J_ToWaitTime = 15000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -265,17 +265,23 @@ client.on('message', async message => {
       }
     
     
-    //2日目の夜の殺害データ
-    let max_vote = J_MurderVote.reduce(aryMax);
-    let day2_night_dead = J_PlayerList.indexOf(max_vote);
+    
   }
   
   function J_PLAY_DAY3_DAYTIME() {
     
     J_STATUS = 6;
     
+    //2日目の夜の殺害データ
+    //投票最大値を検索したあと、その最大値がどこにあるかを検索
+    //そのあとの検索結果の数字を殺す
+    let max_vote = J_MurderVote.reduce(aryMax);//3
+    let day2_night_dead = J_MurderVote.indexOf(max_vote);
     
-    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "人狼") {
+    J_MurderTo = J_PlayerList[day2_night_dead];
+    
+    
+    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "2") {
       J_Message = "おめてどうございます！村人 & 占い師チームの勝利です！";
     }
     else {
