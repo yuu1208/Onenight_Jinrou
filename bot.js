@@ -9,7 +9,7 @@ client.on('ready', () => {
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 3;
+  let J_PLAYER_LIMIT = 5;
 
 //デバッグモード
   let J_Debug = 0;
