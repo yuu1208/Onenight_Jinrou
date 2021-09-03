@@ -69,9 +69,14 @@ client.on('message', async message => {
     
   }
   
-  if(message.content == "人狼") {
+  if(message.content.match(/人狼|jinrou|じんろう/)) {
     if(message.channel.type != "dm") {
-      J_ready(message.member.id);
+      if(J_ready.find(message.member.id)) {
+        message.channel.send("あなたはすでに参加しています！");
+      }
+      else {
+        J_ready.indexOf(message.member.id);
+      }
     }
     else {
       message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "ゲームへの参加はサーバーで行ってください。",inline: false},]}});
@@ -251,7 +256,8 @@ client.on('message', async message => {
     
     J_STATUS = 6;
     
-    //J_MurderTo = 人狼の
+    //J_MurderTo = 人狼の殺し相手
+    
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
