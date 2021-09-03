@@ -9,16 +9,16 @@ client.on('ready', () => {
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 3;
+  let J_PLAYER_LIMIT = 5;
 
 //デバッグモード
   let J_Debug = 0;
 
 //話し合いの待ち時間
-  const J_WAIT_TIME = 10000;
+  const J_WAIT_TIME = 180000;
 
 //投票・占いの待ち時間
-  const J_ToWaitTime = 10000;
+  const J_ToWaitTime = 60000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -93,15 +93,15 @@ client.on('message', async message => {
     }
     J_STATUS = 1;
     
-    // if(J_PlayerList.includes(message.member.id)) {
-    //   message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
-    // }
+    if(J_PlayerList.includes(message.member.id)) {
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
+    }
     
     if(1==1) {
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
       
-      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。",inline: false},]}});
+      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。ゲームに参加した方は、BOTの指示に従いゲームを楽しんで下さい！",inline: false},]}});
     }
     
     
