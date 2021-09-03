@@ -90,21 +90,30 @@ client.on('message', async message => {
       message.channel.send({embed: {color: 0xFDD835,fields: [{name: "🐺 ワンナイト人狼： 進行中の別のゲームがあります",value: "<@" + message.author.id +"> \n現在、他のユーザーがワンナイト人狼をプレイ中です！\n終了するまでしばらくお待ち下さい！",inline: false},]}});
       return;
     }
+    J_STATUS = 1;
     
-    if(J_PlayerList.includes(message.member.id) == true) {
+    if(J_PlayerList.includes(message.member.id)) {
       message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
-    }
-    
-    if(J_Debug == 1) {
-      message.channel.send('参加プレイヤーID: ' + J_PlayerList + '\n[人数カウント: ' + J_PlayerCount + '人 ｜ 開始まであと: ' + (J_PLAYER_LIMIT - J_PlayerCount) + "人 ｜ 許容上限人数: "+ J_PLAYER_LIMIT + "人]");
     }
     
     else {
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
-      J_STATUS = 1;
+      
       message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id +"> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nカテゴリ「プレイ中のゲーム」から「ワンナイト人狼」専用チャンネルをご覧ください。必要に応じて専用VCチャンネルもご利用下さい。",inline: false},]}});
     }
+    
+    
+    if(J_Debug == 1) {
+      let J_PlayerList_Debug;
+      
+      for(cnt = 0; cnt < J_PlayerList.length; cnt++) {
+        J_PlayerList_Debug =+ "<@" +  message.member.id + ">\n";
+      }
+      
+      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "ゲーム参加： ``" + J_PlayerCount + "``\n開始まで後： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``\n最大受付数： ``" + J_PLAYER_LIMIT +"``\n\n参加プレイヤー：\n\n"+J_PlayerList_Debug ,inline: false},]}});
+    }
+    
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
       message.channel.send(":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。これよりゲームを開始します！");
