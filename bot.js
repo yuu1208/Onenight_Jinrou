@@ -5,14 +5,13 @@ client.on('ready', () => {
   console.log("[INFO] " + `${client.user.tag} にログインしました`);
 });
 
-
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 3;
+  const J_PLAYER_LIMIT = 3;
 
 //デバッグモード
-  let J_Debug = 0;
+  const J_Debug = 1;
 
 //話し合いの待ち時間 DEFAULT・180000
   const J_WAIT_TIME = 180000;
@@ -22,22 +21,22 @@ client.on('ready', () => {
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
-var cnt;
+let cnt;
 
-var J_PlayerCount = 0;
-var J_PlayerList = [];
-var J_PlayerJobs = [];
-var J_PlayerList_Select = "";
-var J_MurderTo;
-var J_Fortune_To;
-var J_FortuneWatcher = 0;
-var J_MurderVote = [];
-var J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
-var J_STATUS = 0;
-var J_Message;
-var J_VoteWatcher = [];
-var J_GameChannel;
-var dayOneNightJinrouDead;
+let J_PlayerCount = 0;
+let J_PlayerList = [];
+let J_PlayerJobs = [];
+let J_PlayerList_Select = "";
+let J_MurderTo;
+let J_Fortune_To;
+let J_FortuneWatcher = 0;
+let J_MurderVote = [];
+let J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
+let J_STATUS = 0;
+let J_Message;
+let J_VoteWatcher = [];
+let J_GameChannel;
+let dayOneNightJinrouDead;
 /*
 
 0 実行なし
@@ -51,17 +50,32 @@ var dayOneNightJinrouDead;
 */
 
 function rand() {
-  var len = 1;
-  var str = '0123456789';
-  var strLen = J_PLAYER_LIMIT;
-  var result = "";
+  let len = 1;
+  let str = '0123456789';
+  let strLen = J_PLAYER_LIMIT;
+  let result = "";
  
-  for (var i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     result += str[Math.floor(Math.random() * strLen)];
   }
   return result;  
 }
-function ;
+function initializeGameData() {
+  J_PlayerCount = 0;
+  J_PlayerList = [];
+  J_PlayerJobs = [];
+  J_PlayerList_Select = "";
+  J_MurderTo;
+  J_Fortune_To;
+  J_FortuneWatcher = 0;
+  J_MurderVote = [];
+  J_Jobs = ["村人","🔯 占い師","🐺 人狼"];
+  J_STATUS = 0;
+  J_Message;
+  J_VoteWatcher = [];
+  J_GameChannel;
+  dayOneNightJinrouDead;
+}
 
 const aryMax = function (a, b) {return Math.max(a, b);}
 
@@ -73,15 +87,7 @@ client.on('message', async message => {
   
   if(message.content == "強制終了") {
     message.channel.send("強制終了します。");
-    J_PlayerCount = 0;
-    J_PlayerList = [];
-    J_PlayerJobs = [];
-    J_PlayerList_Select = "";
-    J_MurderTo = "";
-    J_Fortune_To  ="";
-    J_MurderVote = [];
-    J_STATUS = 0;
-    J_VoteWatcher = [];
+    initializeGameData();
   }
   
   if(message.content.match(/人狼|jinrou|じんろう/)) {
@@ -107,16 +113,15 @@ client.on('message', async message => {
     }
     J_STATUS = 1;
     
-    // if(J_PlayerList.includes(message.member.id)) {
-    //   message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
-    // }
-    if(1==1) {
-      J_PlayerList[J_PlayerCount] = JoinUser;
-      J_PlayerCount++;
+    if(J_PlayerList.includes(message.member.id)) {
+      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
+      return;
+    }
+    J_PlayerList[J_PlayerCount] = JoinUser;
+    J_PlayerCount++;
       
       message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。ゲームに参加した方は、BOTの指示に従いゲームを楽しんで下さい！",inline: false},]}});
-    }
-    
+    }   
     
     if(J_Debug == 1) {
       
@@ -127,8 +132,6 @@ client.on('message', async message => {
       }
 
       message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "プレイ待機中： ``" + J_PlayerCount + "``人\n人狼開始まで： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``人\n　　最大人数： ``" + J_PLAYER_LIMIT + "``人\n\n**参加プレイヤー**\n" + J_PlayerList_Select ,inline: false},]}});
-    }
-    
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
       message.channel.send({embed: {color: 0xAD1457,fields: [{name: ":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。",value: "これよりゲームを開始します！",inline: false},]}});
@@ -228,15 +231,7 @@ client.on('message', async message => {
   }
   
   if(dayOneNightJinrouDead == 1) {
-    J_PlayerCount = 0;
-    J_PlayerList = [];
-    J_PlayerJobs = [];
-    J_PlayerList_Select = "";
-    J_MurderTo = "";
-    J_Fortune_To  ="";
-    J_MurderVote = [];
-    J_STATUS = 0;
-    J_VoteWatcher = [];
+    initializeGameData();
     
     if(J_Debug == 1) {
       message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "セーブデータの初期化完了",inline: false},]}});
@@ -335,20 +330,11 @@ client.on('message', async message => {
       J_Message = "居間で倒れていました。**\n\nそして、遺体が静かに消えていき、同時に館の鍵が開いた音がした！\n\n村人たちは、二度とくるまいと、さっそうと館を後にした。";
     }
     else {
-      J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは変えることが出来ず、全員帰らぬ人となってしまいました。";
+      J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは変えることが出来ず、次の日全員 <@" + J_PlayerJobs[J_PlayerList.indexOf('2')] + "> に殺されてしまい、帰らぬ人となってしまいました。";
     }
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。その瞬間・・・\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
-    
-    J_PlayerCount = 0;
-    J_PlayerList = [];
-    J_PlayerJobs = [];
-    J_PlayerList_Select = "";
-    J_MurderTo = "";
-    J_Fortune_To  ="";
-    J_MurderVote = [];
-    J_STATUS = 0;
-    J_VoteWatcher = [];
+    initializeGameData();
     
     if(J_Debug == 1) {
       message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "セーブデータの初期化完了",inline: false},]}});
