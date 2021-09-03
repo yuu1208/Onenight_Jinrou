@@ -275,7 +275,7 @@ client.on('message', async message => {
     //2日目の夜の殺害データ
     //投票最大値を検索したあと、その最大値がどこにあるかを検索
     //そのあとの検索結果の数字を殺す
-    let max_vote = J_MurderVote.reduce(aryMax);//3
+    let max_vote = J_MurderVote.reduce(aryMax);
     let day2_night_dead = J_MurderVote.indexOf(max_vote);
     
     J_MurderTo = J_PlayerList[day2_night_dead];
