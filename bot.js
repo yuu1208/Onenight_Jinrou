@@ -215,14 +215,14 @@ client.on('message', async message => {
       J_MurderTo = J_PlayerList[Math.floor(Math.random() * J_PLAYER_LIMIT)];
     }
     if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]].match(/人狼/)) {
-      J_Message = "キッチンで自分を包丁で刺し、出血性ショックで死亡しました。\n\n人狼が自殺してしまったので、村人たちは窓を割って脱出し、自分たちの町へ帰ったのであった。\n\nこれにてゲームを終了します。";
+      J_Message = "キッチンで自分を包丁で刺し、出血性ショックで死亡しました。\n\n人狼が自殺したので、脱出できなかった館から窓を割って脱出し、自分たちの町へ帰ったのであった。\n\nこれにてゲームを終了します。";
       dayOneNightJinrouDead = 1;
     }
     else {
       J_Message = "血まみれの状態で倒れていました。**\n\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。";
     }
     
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\nそして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが" + J_Message,inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n**そして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + ">** さんが" + J_Message,inline: false},]}});
     setTimeout(J_PLAY_DAY2_NIGHT,J_WAIT_TIME);
   }
   
