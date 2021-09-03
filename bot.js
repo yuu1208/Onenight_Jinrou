@@ -12,13 +12,13 @@ client.on('ready', () => {
   let J_PLAYER_LIMIT = 3;
 
 //デバッグモード
-  let J_Debug = 1;
+  let J_Debug = 0;
 
 //話し合いの待ち時間
-  const J_WAIT_TIME = 5000;
+  const J_WAIT_TIME = 60000;
 
 //投票・占いの待ち時間
-  const J_ToWaitTime = 5000;
+  const J_ToWaitTime = 30000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -66,7 +66,6 @@ client.on('message', async message => {
     J_MurderVote = [];
     J_STATUS = 0;
     J_VoteWatcher = [];
-    
   }
   
   if(message.content.match(/人狼|jinrou|じんろう/)) {
@@ -105,8 +104,14 @@ client.on('message', async message => {
     
     
     if(J_Debug == 1) {
+      
+      let J_PlayerList_Select;
+      
+      for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
+        J_PlayerList_Select += "``" + (cnt + 1) + "``： <@" + J_PlayerList[cnt] + ">\n";
+      }
 
-      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "プレイ待機中： ``" + J_PlayerCount + "``人\n人狼開始まで： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``人\n　　最大人数： ``" + J_PLAYER_LIMIT + "``人\n\n参加プレイヤー：\n\n" + J_PlayerList ,inline: false},]}});
+      message.channel.send({embed: {color: 0xffffff,title: "💻 デバッグモード", fields: [{name: "管理画面",value: "プレイ待機中： ``" + J_PlayerCount + "``人\n人狼開始まで： ``" + (J_PLAYER_LIMIT - J_PlayerCount) + "``人\n　　最大人数： ``" + J_PLAYER_LIMIT + "``人\n\n参加プレイヤー：\n\n" + J_PlayerList_Select ,inline: false},]}});
     }
     
     
@@ -261,17 +266,25 @@ client.on('message', async message => {
     
     J_STATUS = 6;
     
-    //J_MurderTo = 人狼の殺し相手
     
+    if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] == "人狼") {
+      J_Message = "おめてどうございます！村人 & 占い師チームの勝利です！";
+    }
+    else {
+      J_Message = "このあと、村人たちは狼にきれいに食べられてしまったとさ。";
+    }
     
     message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は曇りのようだ。\n\nさて点呼を取ると、なんと**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "**の <@" + J_MurderTo + "> さんが殺害されてしまいました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
-    if("a" == "人狼") {
-      J_Message = "村人 & 占い師チームの勝利です！";
-    }
-    else {
-      J_Message = "人狼の勝ちなので、あんた勝者";
-    }
+    J_PlayerCount = 0;
+    J_PlayerList = [];
+    J_PlayerJobs = [];
+    J_PlayerList_Select = "";
+    J_MurderTo = "";
+    J_Fortune_To  ="";
+    J_MurderVote = [];
+    J_STATUS = 0;
+    J_VoteWatcher = [];
   }
   
 });
