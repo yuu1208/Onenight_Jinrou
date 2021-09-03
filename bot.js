@@ -50,7 +50,15 @@ var J_GameChannel;
 */
 
 function rand() {
-  
+  var len = 1;
+  var str = J_PlayerJobs.length;
+  var strLen = str.length;
+  var result = "";
+ 
+  for (var i = 0; i < len; i++) {
+    result += str[Math.floor(Math.random() * strLen)];
+  }
+  return result;  
 }
 
 const aryMax = function (a, b) {return Math.max(a, b);}
@@ -291,13 +299,13 @@ client.on('message', async message => {
     
     
     if(J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]].match(/人狼/)) {
-      J_Message = "おめでとうございます！村人 & 占い師チームの勝利です！";
+      J_Message = "居間で倒れていました。**\n\nそして、遺体が静かに消えていきました。そして、同時に館の鍵が開いた音がした！\n\n村人たちは、二度とくるまいと、さっそうと館を後にした。";
     }
     else {
-      J_Message = "このあと、村人たちは狼にきれいに食べられてしまったとさ。";
+      J_Message = "血だらけの状態でクローゼットに隠されていました。**このあと、村人たちは変えることが出来ず、全員帰らぬ人となってしまいました。";
     }
     
-    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイにに１台なくなっている…\nみんなは恐る恐る、館を探し始めた。そうすると、 **<@" + J_PlayerList[rand()] + ">** さんが外にバラバラの状態のベッドを見つけた。\n\nこれはなにかおかしいと考え始めた **" + J_PlayerList[rand()] + "** さんはクローゼットや屋根裏を探すと、なんと予想通りに、首のあたりにかじられたような跡がある、**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、血だらけの状態でクローゼットに隠されていました。\n\n" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイにに１台なくなっている…\nみんなは恐る恐る、館を探し始めた。そうすると、 **<@" + J_PlayerList[rand()] + ">** さんが窓から、外にバラバラの状態のベッドを見つけた。\n\nこれはなにかおかしいと考え始めた **<@" + J_PlayerList[rand()] + ">** さんはクローゼットや屋根裏を探すと、なんと予想通りに、\n首のあたりにかじられたような跡がある、**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
     J_PlayerCount = 0;
     J_PlayerList = [];
