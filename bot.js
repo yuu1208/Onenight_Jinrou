@@ -123,7 +123,7 @@ client.on('message', async message => {
     J_STATUS = 1;
     
     if(J_PlayerList.includes(message.member.id)) {
-      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "すでに参加しています！",inline: false},]}});
+      
     }
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
