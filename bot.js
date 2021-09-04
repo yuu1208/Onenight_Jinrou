@@ -15,14 +15,16 @@ client.on('ready', () => {
   let J_Debug = 0;
 
 //話し合いの待ち時間 DEFAULT・180000
-  const J_WAIT_TIME = 180000;
+  const J_WAIT_TIME = 5000;
 
 //投票・占いの待ち時間 DEFAULT・60000
-  const J_ToWaitTime = 60000;
+  const J_ToWaitTime = 5000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 var cnt;
+
+const catchcopy = "🐺 人狼ﾜﾝﾅｲﾄ!";
 
 var J_PlayerCount = 0;
 var J_PlayerList = [];
@@ -86,7 +88,7 @@ client.on('message', async message => {
     message.channel.send({embed: {color: 0xff0000,title: "⚠", fields: [{name: title ,value: msg,inline: false},]}});
   } 
   function MessageDialog(title,msg) {
-    message.channel.send({embed: {color: 0xff0000,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中", fields: [{name: title ,value: msg,inline: false},]}});
+    message.channel.send({embed: {color: 0x66BB6A,title: catchcopy, fields: [{name: title ,value: msg,inline: false},]}});
   }
   
   
@@ -124,7 +126,7 @@ client.on('message', async message => {
     }
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
-      message.channel.send({embed: {color: 0xFDD835,fields: [{name: "🐺 ワンナイト人狼： 進行中の別のゲームがあります",value: "<@" + message.author.id +"> \n現在、他のユーザーがワンナイト人狼をプレイ中です！\n終了するまでしばらくお待ち下さい！",inline: false},]}});
+      message.channel.send({embed: {color: 0xFDD835,title: catchcopy,fields: [{name: "進行中の別のゲームがあります",value: "<@" + message.author.id +"> \n現在、他のユーザーがワンナイト人狼をプレイ中です！\n終了するまでしばらくお待ち下さい！",inline: false},]}});
       return;
     }
     J_STATUS = 1;
@@ -136,7 +138,7 @@ client.on('message', async message => {
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
       
-      message.channel.send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： 参加完了",value: "<@" + message.author.id + "> \n参加しました。\nあなたは **プレイヤー" + (J_PlayerCount) + "** です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。ゲームに参加した方は、BOTの指示に従いゲームを楽しんで下さい！",inline: false},]}});
+      message.channel.send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: message.member.displayName + " さんの参加処理完了！\n",value: "あなたは プレイヤー``" + (J_PlayerCount) + "`` です。※覚える必要はありません\n" + "\n**●プレイ方法**\nこのテキストチャンネルで、BOTがゲームの進行をします。ゲームに参加した方は、BOTの指示に従いゲームを楽しんで下さい！",inline: false},]}});
 
     if(J_Debug == 1) {
       
@@ -151,7 +153,7 @@ client.on('message', async message => {
     
     
     if(J_PLAYER_LIMIT == J_PlayerCount) {
-      message.channel.send({embed: {color: 0xAD1457,fields: [{name: ":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。",value: "これよりゲームを開始します！",inline: false},]}});
+      message.channel.send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: ":small_red_triangle_down: " + J_PLAYER_LIMIT + "人集まりました。",value: "これよりゲームを開始します！",inline: false},]}});
       J_GameChannel = message.channel.id;
       setTimeout(J_PLAY_DAY1_DAYTIME,1000);
     }
@@ -183,10 +185,10 @@ client.on('message', async message => {
     
     //プレイヤー全員に割り振られた役職をDMで伝える
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
-      client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: "あなたの役職をお伝えします。",value: "あなたは **"+ J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、<#" + J_GameChannel + ">に戻ってください。",inline: false},]}});
+      client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: "あなたの役職をお伝えします。",value: "あなたは **"+ J_Jobs[J_PlayerJobs[cnt]] + "** です。\n確認したら、<#" + J_GameChannel + ">に戻ってください。",inline: false},]}});
     }
   
-    message.channel.send({embed: {color: 0xFF9800,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中", fields: [{name: ":sun_with_face: 1日目・昼",value: "**ようこそ、人狼の館へ。**\n\nプレイヤーの皆様には、個人チャットであなたの職業を送信しました。確認を行った人から、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,title: catchcopy, fields: [{name: ":sun_with_face: 1日目・昼",value: "**ようこそ、人狼の館へ。**\n\nプレイヤーの皆様には、個人チャットであなたの職業を送信しました。確認を行った人から、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。",inline: false},]}});
     setTimeout(J_PLAY_DAY1_NIGHT,J_WAIT_TIME);
     
     return;
@@ -200,11 +202,11 @@ client.on('message', async message => {
       J_PlayerList_Select += "``" + (cnt + 1) + "``： <@" + J_PlayerList[cnt] + ">\n";
     }
     
-    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: "人狼の操作：",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
+    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(2)]).send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: "人狼の操作：",value: "1日目の夜になりました。\n人狼のあなたは、ここで特定の１人だけを殺害することができます。殺害されたユーザーは、次の日の朝からチャットで発言できなくなります。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
     
-    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: "占い師の操作：",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
+    client.users.cache.get(J_PlayerList[J_PlayerJobs.indexOf(1)]).send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: "占い師の操作：",value: "1日目の夜になりました。\n占い師のあなたは、ここで特定の１人だけ、村人か人狼かをあなただけが知ることができます。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
     
-    message.channel.send({embed: {color: 0x536DFE,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: ":crescent_moon: 1日目・夜",value: "すっかり日が暮れて、夜になりました。\n人狼と占い師の方には、個人にてチャットを送信します。他の方は朝になるまで待ちましょう！",inline: false},]}});
+    message.channel.send({embed: {color: 0x536DFE,title: catchcopy,fields: [{name: ":crescent_moon: 1日目・夜",value: "すっかり日が暮れて、夜になりました。\n人狼と占い師の方には、個人にてチャットを送信します。他の方は朝になるまで待ちましょう！",inline: false},]}});
     
     setTimeout(J_PLAY_DAY2_DAYTIME,J_ToWaitTime);
     
@@ -216,7 +218,7 @@ client.on('message', async message => {
       if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(1)]) {
         if(!J_Fortune_To) {
           J_Fortune_To = J_PlayerList[J_Number - 1];
-          MessageDialog("占い結果：","<@" + J_PlayerList[J_Number - 1] + ">さんは ``" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "``でした。\n" + "<#" + J_GameChannel + "に戻り、次のターンまでお待ち下さい。");
+          MessageDialog("占い結果：","<@" + J_PlayerList[J_Number - 1] + ">さんは ``" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "``でした。\n" + "<#" + J_GameChannel + ">に戻り、次のターンまでお待ち下さい。");
         }
         else {
           MessageError("占えるのは一度限りです！","次のターンまでお待ち下さい。");
@@ -243,7 +245,7 @@ client.on('message', async message => {
       J_Message = "血まみれの状態で倒れていました。**\n\n殺害された人はチャットで発言できなくなります。それでは昨日の昼同様に、会議を開始して下さい！\n\n⏳ 制限時間は " + J_WAIT_TIME / 1000 / 60 + "分 です。";
     }
     
-    message.channel.send({embed: {color: 0xFF9800,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n**そして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが" + J_Message,inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,title: catchcopy,fields: [{name: ":sun_with_face: 2日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は雲がきれいな空だ。\n\n**そして廊下には、" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが" + J_Message,inline: false},]}});
     setTimeout(J_PLAY_DAY2_NIGHT,J_WAIT_TIME);
   }
   
@@ -280,14 +282,14 @@ client.on('message', async message => {
     }
     
     
-    message.channel.send({embed: {color: 0x536DFE,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、個人チャットにて、投票形式で誰を殺害するかを決定します。\nもっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。\nなお投票は1回・1人のみですので、お間違えのないようにお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
+    message.channel.send({embed: {color: 0x536DFE,title: catchcopy,fields: [{name: ":crescent_moon: 2日目・夜",value: "すっかり日が暮れて、夜になりました。\n\nこれより、個人チャットにて、投票形式で誰を殺害するかを決定します。\nもっとも票の多かった方は、次の日の朝に殺害されてしまいます。\n\nあなたが人狼だと思う人に票を入れてください。\nなお投票は1回・1人のみですので、お間違えのないようにお願いします。\nそれでは個人チャットにてどうぞ！",inline: false},]}});
     
     for(cnt = 0; cnt < J_PLAYER_LIMIT; cnt++) {
       if(J_MurderTo != J_PlayerList[cnt]) {
-        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: "投票の操作：",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。\n\n最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n\なお現在、１日目で殺害された <@" + J_MurderTo + ">さんは投票を行うことが出来ません。また、この人に投票することも出来ません。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
+        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: "投票の操作：",value: "2日目の夜になりました。\nあなたは、ここで特定の１人だけを投票することができます。\n\n最も投票数が多いユーザーは、次の日の朝に殺害されます。\n\n\なお現在、１日目で殺害された <@" + J_MurderTo + ">さんは投票を行うことが出来ません。また、この人に投票することも出来ません。\n\n以下から対象のユーザー選んだ後、その人の名前の左側にある数字を、このBOT宛に送信して下さい。\n\n⏳ 制限時間は " + J_ToWaitTime / 1000 / 60 + "分 です。\n\n" + J_PlayerList_Select,inline: false},]}});
       }
       else {
-        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,fields: [{name: "🐺 ワンナイト人狼： You are dead!!",value: "2日目の夜になりました。\nあなたは既に人狼に殺害されたため、投票を行うことができません。",inline: false},]}});
+        client.users.cache.get(J_PlayerList[cnt]).send({embed: {color: 0xAD1457,title: catchcopy,fields: [{name: "あなたは殺害されています！",value: "2日目の夜になりましたが、あなたは既に人狼に殺害されたため、投票を行うことができません。",inline: false},]}});
       }
     }
     
@@ -358,7 +360,7 @@ client.on('message', async message => {
       J_Message = "血だらけの状態でクローゼットに隠されていました。**\n\nこのあと、村人たちは帰ることが出来ず、次の日、全員 <@" + J_PlayerList[J_PlayerJobs.indexOf(2)] + "> に殺され、帰らぬ人となってしまいました。";
     }
     
-    message.channel.send({embed: {color: 0xFF9800,title: "🐺 人狼ﾜﾝﾅｲﾄ! → 進行中",fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。その瞬間・・・\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
+    message.channel.send({embed: {color: 0xFF9800,title: catchcopy,fields: [{name: ":sun_with_face: 3日目・朝",value: "おはようございます！\nさて、カーテンを開けると、今日は霧が深いようだ。\n\nあれ、寝室に人数分あるベッドだったはずが、キレイに1台なくなっている…\nみんなは恐る恐る、館を探し始めた。その瞬間・・・\n\n首のあたりにかじられたような跡がある、\n**" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_MurderTo)]] + "の <@" + J_MurderTo + "> さんが、" +  J_Message + "\n\nこれにてゲームを終了します。",inline: false},]}});
     
     J_PlayerCount = 0;
     J_PlayerList = [];
