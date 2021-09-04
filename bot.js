@@ -15,10 +15,10 @@ client.on('ready', () => {
   let J_Debug = 0;
 
 //話し合いの待ち時間 DEFAULT・180000
-  const J_WAIT_TIME = 5000;
+  const J_WAIT_TIME = 180000;
 
 //投票・占いの待ち時間 DEFAULT・60000
-  const J_ToWaitTime = 5000;
+  const J_ToWaitTime = 60000;
 
 //▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
