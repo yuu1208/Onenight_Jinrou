@@ -9,7 +9,7 @@ client.on('ready', () => {
 //▼▼▼▼▼▼▼▼▼▼▼▼▼ プレイ設定 ▼▼▼▼▼▼▼▼▼▼▼▼
 
 //最大プレイ人数
-  let J_PLAYER_LIMIT = 3;
+  let J_PLAYER_LIMIT = 4;
 
 //デバッグモード
   let J_Debug = 0;
@@ -82,6 +82,10 @@ const aryMax = function (a, b) {return Math.max(a, b);}
 
 client.on('message', async message => {
   
+  function MessageError(title,msg) {
+    message.channel.send({embed: {color: 0xff0000,title: "⚠", fields: [{name: title ,value: msg,inline: false},]}});
+  } 
+  
   
   //再帰呼び出し対策： BOTが話した語句には応答しない。
   if(message.author.id == client.user.id) {return}
@@ -104,7 +108,7 @@ client.on('message', async message => {
       J_ready(message.member.id);
     }
     else {
-      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "ゲームへの参加はサーバーで行ってください。",inline: false},]}});
+      MessageError("ゲーム参加受付は、指定サーバー内でのみ受け付けております。","参加しているサーバーから、受付を行って下さい。");
     }
   }
   
@@ -112,7 +116,7 @@ client.on('message', async message => {
   function J_ready(JoinUser) {
     
     if(J_PLAYER_LIMIT <= 2 || J_Debug >= 2) {
-      message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "**ワンナイト人狼**を実行する際に問題が発生しました。",inline: false},]}});
+      MessageError("ゲーム開始できませんでした","プレイ人数の設定が間違っています。");
       return;
     }
     
@@ -123,7 +127,8 @@ client.on('message', async message => {
     J_STATUS = 1;
     
     if(J_PlayerList.includes(message.member.id)) {
-      
+      MessageError("あなたはすでに参加しています！","もうしばらくお待ち下さい…");
+      return;
     }
       J_PlayerList[J_PlayerCount] = JoinUser;
       J_PlayerCount++;
@@ -211,7 +216,7 @@ client.on('message', async message => {
           message.channel.send({embed: {color: 0xAD1457,fields: [{name: ":small_red_triangle_down: ワンナイト人狼：占い結果",value: "<@" + J_PlayerList[J_Number - 1] + "> さんを占った結果、``" + J_Jobs[J_PlayerJobs[J_PlayerList.indexOf(J_Fortune_To)]] + "``でした。",inline: false},]}});
         }
         else {
-          message.channel.send("⚠ 占える回数は一度のみです。");
+          MessageError("占えるのは一度限りです。","次のターンまでお待ち下さい。");
         }
       }
       else if(message.channel.type == "dm" && message.author == J_PlayerList[J_PlayerJobs.indexOf(2)]) {
@@ -298,6 +303,7 @@ client.on('message', async message => {
       if(message.channel.type == "dm" && J_MurderTo != message.author) {
         
         if(J_VoteWatcher.includes(message.author)) {
+          MessageError("投票は一度限りです！","もうしばらくお待ち下さい…");
           message.channel.send({embed: {color: 0xff0000,fields: [{name: "⚠ エラーが発生しました",value: "投票は1度しか行なえません！",inline: false},]}});
         }
         
