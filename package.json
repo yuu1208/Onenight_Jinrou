@@ -4,8 +4,8 @@
   "description": "discord bot sample on Glitch",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^12.5.2",
-    "ytdl-core": "^4.4.5"
+    "ytdl-core": "^4.4.5",
+    "discord.js": "^12.6.0"
   },
   "devDependencies": {},
   "scripts": {
@@ -13,6 +13,6 @@
     "test": "node index.js"
   },
   "engines": {
-    "node": "12.x"
+    "node": "16.x"
   }
 }
